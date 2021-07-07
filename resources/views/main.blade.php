@@ -3,7 +3,6 @@
 @section('content')
 
 @php
-
 @endphp
 
 <section class="control">
@@ -12,18 +11,17 @@
             <a href="" class="btn btn-outline-secondary">Top</a>
             <a href="" class="btn btn-outline-secondary">New</a>
 
-            <div class="btn-group pull-left filterBy" role="group" aria-label="filterBy">
-                <button type="button" class="btn btn-xs btn-default border-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                All
+            <div class="dropdown d-inline">
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    All
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" id="item-all">All</a></li>
-                    <li><a href="#" id="item-allexceptdone">All except done</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" id="item-underconsideration">Under consideration</a></li>
-                    <li><a href="#" id="item-planned">Planned</a></li>
-                    <li><a href="#" id="item-notplanned">Not planned</a></li>
-                    <li><a href="#" id="item-done">Done</a></li>
+                <ul class="dropdown-menu" aria-labelledby="book-dropdown">
+                    <li><a href="#" class="dropdown-item">All</a></li>
+                    <li><a href="#" class="dropdown-item">All except done</a></li>
+                    <li><a href="#" class="dropdown-item">Under consideration</a></li>
+                    <li><a href="#" class="dropdown-item">Planned</a></li>
+                    <li><a href="#" class="dropdown-item">Not planned</a></li>
+                    <li><a href="#" class="dropdown-item">Done</a></li>
                 </ul>
             </div>
         </div>
@@ -51,7 +49,7 @@
                                     <span class="h1">{{ $suggestion->votes }}</span>
                                     <p>votes</p>
                                     @if (isset($_COOKIE["list_upvoted_suggestion"]))
-                                        @if (strpos($_COOKIE["list_upvoted_suggestion"], "||sgt$suggestion->id||") !== false)
+                                        @if (strpos($_COOKIE["list_upvoted_suggestion"], "sgt$suggestion->id") !== false)
                                             <p><i class="bi bi-check2"></i>Voted up</p>
                                         @endif
                                     @endif

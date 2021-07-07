@@ -11,7 +11,7 @@
 |
 */
 if (!isset($_COOKIE["list_upvoted_suggestion"])) {
-    setcookie("list_upvoted_suggestion", "", time() + 86400 * 365, "/");
+    setcookie("list_upvoted_suggestion", "list:||||", time() + 86400 * 365, "/");
 }
 
 Route::get('/', 'SuggestionController@index');
@@ -24,3 +24,6 @@ Route::post('/suggestions/store', 'SuggestionController@store');
 
 Route::post('/suggestions/{id}/comment', 'CommentController@store');
 
+Route::get('/suggestions/{id}/upvote', 'UpvoteController@upvote');
+
+Route::get('/suggestions/{id}/deupvote', 'UpvoteController@deupvote');
