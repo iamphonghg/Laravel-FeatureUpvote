@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="container">
-        <a href="/" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
+        <a href="/{{ $shortName }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
@@ -13,12 +13,12 @@
             <div class="row border mt-4">
                 <div class="col-3 d-flex">
                     <div class="votes p-4 border-end">
-                        <p class="h1">{{ $suggestion->votes }}</p>
+                        <p class="h1">{{ count($suggestion->votes) + 1 }}</p>
                         <p>votes</p>
-                        @if (strpos($_COOKIE["list_upvoted_suggestion"], "sgt$suggestion->id-") !== false)
-                            <a href="/suggestions/{{ $suggestion->id }}/deupvote" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
+                        @if (strpos($_COOKIE["list_voted_suggestion"], "sgt$suggestion->id-") !== false)
+                            <a href="/suggestions/{{ $suggestion->id }}/devote" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
                         @else
-                            <a href="/suggestions/{{ $suggestion->id }}/upvote" class="btn btn-secondary d-block">Upvote</a>
+                            <a href="/suggestions/{{ $suggestion->id }}/vote" class="btn btn-secondary d-block">Vote</a>
                         @endif
                     </div>
                 </div>
@@ -27,18 +27,18 @@
                         <h3 class="h4">{{ $suggestion->content }}</h3>
                         <p>
                             Suggested by:
-                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->upvoted_at)) }} |
-                            <a href="#" class="text-secondary">Comments: {{ $suggestion->comments }}</a>
+                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->voted_at)) }} |
+                            <a href="#" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
                         </p>
                         @if ($suggestion->is_pinned)
                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
                         @endif
-                        <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->evaluation }}</label>
+                        <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->status }}</label>
                     </div>
                 </div>
             </div>
 
-            @if ($suggestion->comments > 0)
+            @if (count($suggestion->comments) > 0)
                 @php
                     {{
                         $comments = App\Models\Suggestion::find($suggestion->id)->getComments;

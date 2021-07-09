@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Suggestion;
-use App\Models\Upvote;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class UpvoteController extends Controller
+class VoteController extends Controller
 {
-    public function upvote(Request $request, $id) {
+    public function vote(Request $request, $id) {
         $suggestion = Suggestion::find($id);
         $suggestion->votes++;
         $suggestion->save();
@@ -26,7 +26,7 @@ class UpvoteController extends Controller
         return redirect("/suggestions/$id");
     }
 
-    public function deupvote($id) {
+    public function devote($id) {
         $suggestion = Suggestion::find($id);
         $suggestion->votes--;
         $suggestion->save();

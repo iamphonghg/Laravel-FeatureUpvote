@@ -11,12 +11,12 @@ class Suggestion extends Model
 
     public $timestamps = false;
 
-    public function getComments() {
+    public function comments() {
         return $this->hasMany('App\Models\Comment');
     }
 
-    public function upvotes() {
-        return $this->hasMany('App\Models\Upvote');
+    public function votes() {
+        return $this->hasMany('App\Models\Vote');
     }
 
     public function contributor() {

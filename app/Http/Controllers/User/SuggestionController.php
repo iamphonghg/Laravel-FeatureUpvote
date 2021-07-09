@@ -1,8 +1,7 @@
 <?php
-
 namespace App\Http\Controllers\User;
 
-use App\Models\Boards;
+use App\Models\Board;
 use Illuminate\Http\Request;
 use App\Models\Suggestion;
 use App\Models\Contributor;
@@ -10,30 +9,21 @@ use App\Models\Vote;
 use App\Http\Controllers\Controller;
 
 class SuggestionController extends Controller {
-
-    public function index(Request $request, $shortName) {
-        $suggestions = Board::where('short_name', $shortName)->first();
-        return view('user\main')->with('suggestions', $suggestions);
+    public function index($shortName) {
+        $board = Board::where('short_name', $shortName)->first();
+        if ($board == null) {
+            abort(404);
+        } else {
+            $suggestions = $board->suggestions;
+            return view('user\main', compact('suggestions', 'shortName'));
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+    public function create() {
         return view('user\create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $contributor = new Contributor();
         $contributor->name = $request->name;
         $contributor->email = $request->email;
@@ -45,62 +35,29 @@ class SuggestionController extends Controller {
         $suggestion->content = $request->get('content');
         $suggestion->contributor_id = $contributor->id;
         $suggestion->save();
-        $upvote = new Upvote();
-        $upvote->suggestion_id = $suggestion->id;
-        $upvote->ip = Controller::getIp();
-        $upvote->name_and_email = "$contributor->name ($contributor->email)";
-        $upvote->user_agent = $request->userAgent();
-        $upvote->save();
+        $vote = new Vote();
+        $vote->suggestion_id = $suggestion->id;
+        $vote->ip = Controller::getIp();
+        $vote->name_and_email = "$contributor->name ($contributor->email)";
+        $vote->user_agent = $request->userAgent();
+        $vote->save();
 
-        $newCookieValue = $_COOKIE["list_upvoted_suggestion"] . "sgt$suggestion->id-uvid$upvote->id||||";
-        setcookie("list_upvoted_suggestion", $newCookieValue, time() + 86400 * 365, "/");
+        $newCookieValue = $_COOKIE["list_voted_suggestion"] . "sgt$suggestion->id-uvid$vote->id||||";
+        setcookie("list_voted_suggestion", $newCookieValue, time() + 86400 * 365, "/");
 
         return redirect(route('suggestions.show', $suggestion->id))->with('success', 'Your suggestion was added and approved.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $suggestion = Suggestion::findOrFail($id);
-        return view('user\detail')->with('suggestion', $suggestion);
+    public function show($shortName, Suggestion $suggestion) {
+        return view('user\detail', compact('shortName', 'suggestion'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id) {
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-
+    public function destroy($id) {
     }
 }
