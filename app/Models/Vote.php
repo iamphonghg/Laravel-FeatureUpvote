@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Upvote extends Model
+class Vote extends Model
 {
     public $timestamps = false;
 

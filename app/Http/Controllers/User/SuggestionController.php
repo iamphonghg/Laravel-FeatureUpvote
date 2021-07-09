@@ -1,26 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Models\Boards;
 use Illuminate\Http\Request;
 use App\Models\Suggestion;
 use App\Models\Contributor;
-use App\Models\Upvote;
+use App\Models\Vote;
+use App\Http\Controllers\Controller;
 
+class SuggestionController extends Controller {
 
-class SuggestionController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-
-
-        $suggestions = Suggestion::all();
-        return view('main')->with('suggestions', $suggestions);
+    public function index(Request $request, $shortName) {
+        $suggestions = Board::where('short_name', $shortName)->first();
+        return view('user\main')->with('suggestions', $suggestions);
     }
 
     /**
@@ -30,7 +23,7 @@ class SuggestionController extends Controller
      */
     public function create()
     {
-        return view('create');
+        return view('user\create');
     }
 
     /**
@@ -58,7 +51,11 @@ class SuggestionController extends Controller
         $upvote->name_and_email = "$contributor->name ($contributor->email)";
         $upvote->user_agent = $request->userAgent();
         $upvote->save();
-        return redirect("/suggestions/$suggestion->id")->with('success', 'Your suggestion was added and approved.');
+
+        $newCookieValue = $_COOKIE["list_upvoted_suggestion"] . "sgt$suggestion->id-uvid$upvote->id||||";
+        setcookie("list_upvoted_suggestion", $newCookieValue, time() + 86400 * 365, "/");
+
+        return redirect(route('suggestions.show', $suggestion->id))->with('success', 'Your suggestion was added and approved.');
     }
 
     /**
@@ -70,7 +67,7 @@ class SuggestionController extends Controller
     public function show($id)
     {
         $suggestion = Suggestion::findOrFail($id);
-        return view('detail')->with('suggestion', $suggestion);
+        return view('user\detail')->with('suggestion', $suggestion);
     }
 
     /**
@@ -106,10 +103,4 @@ class SuggestionController extends Controller
     {
 
     }
-
-
-
-
-
-
 }

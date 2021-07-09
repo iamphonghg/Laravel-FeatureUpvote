@@ -9,22 +9,22 @@
         <div class="container">
             <div class="row my-5">
                 <div class="col-lg-12">
-                    <form action="/suggestions/store" method="POST">
+                    <form action="{{ route('suggestions.store') }}" method="POST">
                         @csrf
                         <label for="title" class="form-label"><span class="fw-bold h5">Title</span></label>
                         <div class="mb-4 input-group">
                             <input type="text" class="form-control" id="title" placeholder="Your suggestion" name="title">
                         </div>
-                        
+
                         <label for="description" class="form-label"><span class="fw-bold h5">Description</span></label>
                         <div class="mb-4 input-group">
                             <textarea id="query" class="form-control" style="height: 140px" placeholder="Description of your suggestion (optional)" name="content"></textarea>
                         </div>
-                        
-                       
+
+
                             <a href="" class="btn btn-outline-secondary mb-4">Add image (optional)</a>
-                       
-                        
+
+
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
@@ -44,7 +44,7 @@
                                     <input type="text" class="form-control" id="title" placeholder="Your email" name="shop_name">
                                 </div>
                             </div>
-                            
+
                         </div>
 
                         <div class="d-flex mb-4 text-center justify-content-end">
@@ -52,7 +52,7 @@
                             <a href="/" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                     </form>
-                </div>                
+                </div>
             </div>
         </div>
     </section>

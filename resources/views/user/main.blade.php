@@ -3,6 +3,7 @@
 @section('content')
 
 @php
+
 @endphp
 
 <section class="control">
@@ -29,7 +30,7 @@
         <div class="right">
             <form class="d-flex" id="searchArea">
                 <input type="text" class="form-control me-2" placeholder="Search" aria-label="Search">
-                <a href="/suggestions/create" class="btn btn-secondary text-nowrap" id="btnAdd">ADD YOUR SUGGESTION</a>
+                <a href="{{ route('suggestions.create') }}" class="btn btn-secondary text-nowrap" id="btnAdd">ADD YOUR SUGGESTION</a>
             </form>
         </div>
     </div>
@@ -45,7 +46,7 @@
                     <div class="row">
                         <div class="col-3 d-flex">
                             <div class="votes p-4 border-end">
-                                <a href="/suggestions/{{ $suggestion->id }}" class="btn">
+                                <a href="{{ route('suggestions.show', $suggestion->id) }}" class="btn">
                                     <span class="h1">{{ $suggestion->votes }}</span>
                                     <p>votes</p>
                                     @if (isset($_COOKIE["list_upvoted_suggestion"]))
@@ -58,11 +59,11 @@
                         </div>
                         <div class="col-9 justify-content-left">
                             <div class="infos p-4">
-                                <a href="/suggestions/{{ $suggestion->id }}" class="text-decoration-none text-dark"><h3 class="h4">{{ $suggestion->title }}</h3></a>
+                                <a href="{{ route('suggestions.show', $suggestion->id) }}" class="text-decoration-none text-dark"><h3 class="h4">{{ $suggestion->title }}</h3></a>
                                 <p>
                                     Suggested by:
                                     <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->upvoted_at)) }} |
-                                    <a href="/suggestions/{{ $suggestion->id }}" class="text-secondary">Comments: {{ $suggestion->comments }}</a>
+                                    <a href="{{ route('suggestions.show', $suggestion->id) }}" class="text-secondary">Comments: {{ $suggestion->comments }}</a>
                                 </p>
                                 @if ($suggestion->is_pinned)
                                     <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>

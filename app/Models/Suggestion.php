@@ -22,4 +22,7 @@ class Suggestion extends Model
     public function contributor() {
         return $this->belongsTo('App\Models\Contributor');
     }
+    public function board() {
+        return $this->belongsTo('App\Models\Board');
+    }
 }
