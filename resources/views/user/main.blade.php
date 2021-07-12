@@ -29,7 +29,7 @@
         <div class="right">
             <form class="d-flex" id="searchArea">
                 <input type="text" class="form-control me-2" placeholder="Search" aria-label="Search">
-                <a href="{{ route('suggestions.create', $shortName) }}" class="btn btn-secondary text-nowrap" id="btnAdd">ADD YOUR SUGGESTION</a>
+                <a href="{{ route('suggestions.create', $board) }}" class="btn btn-secondary text-nowrap" id="btnAdd">ADD YOUR SUGGESTION</a>
             </form>
         </div>
     </div>
@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-3 d-flex">
                             <div class="votes p-4 border-end">
-                                <a href="{{ route('suggestions.show', [$shortName, $suggestion->id]) }}" class="btn">
+                                <a href="{{ route('suggestions.show', [$board, $suggestion]) }}" class="btn">
                                     <span class="h1">{{ count($suggestion->votes) + 1 }}</span>
                                     <p>votes</p>
                                     @if (isset($_COOKIE["list_voted_suggestion"]))
@@ -58,12 +58,12 @@
                         </div>
                         <div class="col-9 justify-content-left">
                             <div class="infos p-4">
-                                <a href="{{ route('suggestions.show', [$shortName, $suggestion->id]) }}" class="text-decoration-none text-dark"><h3 class="h4">{{ $suggestion->title }}</h3></a>
+                                <a href="{{ route('suggestions.show', [$board, $suggestion->id]) }}" class="text-decoration-none text-dark"><h3 class="h4">{{ $suggestion->title }}</h3></a>
                                 <p>
                                     Suggested by:
                                     <span class="fw-bold">{{ $suggestion->contributor->name }}</span>
-                                    {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->upvoted_at)) }} |
-                                    <a href="{{ route('suggestions.show', ['vipproapp', $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
+                                    {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
+                                    <a href="{{ route('suggestions.show', [$board, $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
                                 </p>
                                 @if ($suggestion->is_pinned)
                                     <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>

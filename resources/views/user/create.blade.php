@@ -2,14 +2,14 @@
 
 @section('content')
     <section class="container">
-        <a href="/" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
+        <a href="/boards/{{ $board }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
             <i class="bi bi-arrow-left"></i>Back
         </a>
         <h1 class="mt-3">What improvement would you like to see in our product?</h1>
         <div class="container">
             <div class="row my-5">
                 <div class="col-lg-12">
-                    <form action="{{ route('suggestions.store') }}" method="POST">
+                    <form action="{{ route('suggestions.store', $board) }}" method="GET">
                         @csrf
                         <label for="title" class="form-label"><span class="fw-bold h5">Title</span></label>
                         <div class="mb-4 input-group">

@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="container">
-        <a href="/{{ $shortName }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
+        <a href="/boards/{{ $board }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
@@ -16,9 +16,9 @@
                         <p class="h1">{{ count($suggestion->votes) + 1 }}</p>
                         <p>votes</p>
                         @if (strpos($_COOKIE["list_voted_suggestion"], "sgt$suggestion->id-") !== false)
-                            <a href="/suggestions/{{ $suggestion->id }}/devote" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
+                            <a href="{{ route('suggestions.devote', [$board, $suggestion->id]) }}" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
                         @else
-                            <a href="/suggestions/{{ $suggestion->id }}/vote" class="btn btn-secondary d-block">Vote</a>
+                            <a href="{{ route('suggestions.vote', [$board, $suggestion->id]) }}" class="btn btn-secondary d-block">Vote</a>
                         @endif
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                         <h3 class="h4">{{ $suggestion->content }}</h3>
                         <p>
                             Suggested by:
-                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->voted_at)) }} |
+                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
                             <a href="#" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
                         </p>
                         @if ($suggestion->is_pinned)
@@ -41,11 +41,11 @@
             @if (count($suggestion->comments) > 0)
                 @php
                     {{
-                        $comments = App\Models\Suggestion::find($suggestion->id)->getComments;
+                        $comments = $suggestion->comments;
                     }}
                 @endphp
                 <div class="row border mt-4">
-                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ $suggestion->comments }}</span>
+                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ count($comments) }}</span>
                 </div>
 
                 @foreach ($comments as $comment)
@@ -64,7 +64,7 @@
             <div class="row border border-top-0 mb-5">
                 <div class="row mt-3">
                     <div class="col-lg-12 ms-2">
-                        <form method="POST" action="/suggestions/{{ $suggestion->id }}/comment">
+                        <form method="POST" action="{{ route('suggestions.comment', [$board, $suggestion->id]) }}">
                             @csrf
                             <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
                             <div class="mb-4 input-group">

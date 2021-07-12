@@ -7,12 +7,12 @@
     Route::get('/signin', 'Admin\SigninController@index');
     Route::get('/dashboard', 'Admin\AdminController@dashboard');
 
-    Route::resource('{short_name}/suggestions', 'User\SuggestionController')->except([
-        'index'
-    ]);
-    Route::get('/{short_name}', 'User\SuggestionController@index');
+    Route::get('/boards/{board}', 'User\SuggestionController@index')->name('suggestions.index');
+    Route::get('/boards/{board}/suggestions', 'User\SuggestionController@store')->name('suggestions.store');
+    Route::get('/boards/{board}/suggestions/create', 'User\SuggestionController@create')->name('suggestions.create');
+    Route::get('/boards/{board}/suggestions/{suggestion}', 'User\SuggestionController@show')->name('suggestions.show');
 
-    Route::post('/suggestions/{id}/comment', 'User\CommentController@store');
+    Route::post('/boards/{board}/suggestions/{suggestion}/comment', 'User\CommentController@store')->name('suggestions.comment');
 
-    Route::get('/suggestions/{id}/vote', 'User\VoteController@vote');
-    Route::get('/suggestions/{id}/devote', 'User\VoteController@devote');
+    Route::get('/boards/{board}/suggestions/{suggestion}/vote', 'User\VoteController@vote')->name('suggestions.vote');
+    Route::get('/boards/{board}/suggestions/{suggestion}/devote', 'User\VoteController@devote')->name('suggestions.devote');
