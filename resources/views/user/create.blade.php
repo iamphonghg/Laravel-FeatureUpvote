@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.suggestion')
 
 @section('content')
     <section class="container">

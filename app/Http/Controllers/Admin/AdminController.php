@@ -17,10 +17,6 @@ class AdminController extends Controller
         return view('admin/landingpage');
     }
 
-    public function dashboard() {
-        return view('admin/dashboard');
-    }
-
     /**
      * Show the form for creating a new resource.
      *

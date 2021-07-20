@@ -7,6 +7,7 @@ use App\Models\Suggestion;
 use App\Models\Contributor;
 use App\Models\Vote;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class SuggestionController extends Controller {
     public function index($board) {
@@ -15,6 +16,9 @@ class SuggestionController extends Controller {
             abort(404);
         } else {
             $suggestions = $boardRes->suggestions;
+            if (Auth::check()) {
+                return view('admin\main', compact('suggestions', 'board'));
+            }
             return view('user\main', compact('suggestions', 'board'));
         }
     }

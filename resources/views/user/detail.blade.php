@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.suggestion')
 
 @section('content')
     <section class="container">
@@ -13,7 +13,7 @@
             <div class="row border mt-4">
                 <div class="col-3 d-flex">
                     <div class="votes p-4 border-end">
-                        <p class="h1">{{ count($suggestion->votes) + 1 }}</p>
+                        <p class="h1">{{ count($suggestion->votes) }}</p>
                         <p>votes</p>
                         @if (strpos($_COOKIE["list_voted_suggestion"], "sgt$suggestion->id-") !== false)
                             <a href="{{ route('suggestions.devote', [$board, $suggestion->id]) }}" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
