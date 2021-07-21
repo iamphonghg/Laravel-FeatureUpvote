@@ -1,9 +1,11 @@
 @extends('layouts.suggestion')
 
+@section('title', "User Suggestion - $board")
 @section('content')
 
     @php
-        @endphp
+
+    @endphp
 
     <section class="control">
         <div id="control" class="container d-flex flex-wrap justify-content-between">
@@ -23,6 +25,10 @@
                         <li><a href="#" class="dropdown-item">Not planned</a></li>
                         <li><a href="#" class="dropdown-item">Done</a></li>
                     </ul>
+                </div>
+                <div class="filters d-inline">
+                    <input class="showDeleted" name="deleted" type="checkbox" value="1">
+                    <label for="shoeDeleted">Show deleted</label>
                 </div>
             </div>
 
