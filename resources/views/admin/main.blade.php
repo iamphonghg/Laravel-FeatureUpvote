@@ -1,6 +1,11 @@
 @extends('layouts.suggestion')
 
 @section('title', "User Suggestion - $board")
+
+@section('custom-css')
+
+@endsection
+
 @section('content')
 
     @php
@@ -47,7 +52,18 @@
                 <div class="list-group">
 
                     @foreach ($suggestions as $suggestion)
-                        <div class="list-group-item py-3">
+                        @if ($suggestion->status != 'Deleted')
+                            @if ($suggestion->status == 'Awaiting approval')
+                                @php
+                                    $unmoderated = "opacity: 0.5";
+                                @endphp
+                            @else
+                                @php
+                                    $unmoderated = '';
+                                @endphp
+                            @endif
+                        @endif
+                        <div class="list-group-item py-3" style="{{ $unmoderated }}">
                             <div class="row">
                                 <div class="col-3 d-flex">
                                     <div class="votes p-4 border-end">
@@ -72,7 +88,19 @@
                                             <a href="{{ route('suggestions.show', [$board, $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
                                         </p>
                                         @if ($suggestion->is_pinned)
-                                            <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
+                                            <label for="" class="bg-success text-light px-2 py-1 rounded">
+                                                <i class="bi bi-bookmark"></i>
+                                                Pinned
+                                            </label>
+                                            <a href="{{ route('suggestions.unpin', [$board, $suggestion]) }}" class="btn btn-outline-secondary">
+                                                <i class="bi bi-x"></i>
+                                                Unpin
+                                            </a>
+                                        @elseif ($suggestion->status != 'Awaiting approval')
+                                            <a href="{{ route('suggestions.pin', [$board, $suggestion]) }}" class="btn btn-outline-secondary">
+                                                <i class="bi bi-bookmark"></i>
+                                                Pin this
+                                            </a>
                                         @endif
                                         <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->status }}</label>
                                     </div>

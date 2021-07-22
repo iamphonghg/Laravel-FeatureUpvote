@@ -1,5 +1,7 @@
 @extends('layouts.suggestion')
 
+@section('title', "$suggestion->title - $board")
+
 @section('content')
     <section class="container">
         <a href="/boards/{{ $board }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
@@ -27,8 +29,12 @@
                         <h3 class="h4">{{ $suggestion->content }}</h3>
                         <p>
                             Suggested by:
-                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span> {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
-                            <a href="#" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
+                            <a href="#contributor" class="fw-bold">
+                                {{ $suggestion->contributor->name }}
+                            </a>
+                            <span class="fw-bold font-italic">{{ $suggestion->contributor->email }}</span>
+                            {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
+                            <span class="text-secondary">Comments: {{ count($suggestion->comments) }}</span>
                         </p>
                         @if ($suggestion->is_pinned)
                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>

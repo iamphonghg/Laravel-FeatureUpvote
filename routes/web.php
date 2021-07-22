@@ -17,6 +17,9 @@
     Route::get('/boards/{board}/suggestions/{suggestion}/vote', 'User\VoteController@vote')->name('suggestions.vote');
     Route::get('/boards/{board}/suggestions/{suggestion}/devote', 'User\VoteController@devote')->name('suggestions.devote');
 
-Auth::routes();
+    Route::get('/boards/{board}/suggestions/{suggestion}/pin', 'User\SuggestionController@pin')->name('suggestions.pin');
+    Route::get('/boards/{board}/suggestions/{suggestion}/unpin', 'User\SuggestionController@unpin')->name('suggestions.unpin');
 
-Route::get('/home', 'HomeController@index')->name('home');
+    Auth::routes();
+
+    Route::get('/home', 'HomeController@index')->name('home');

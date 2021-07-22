@@ -15,7 +15,8 @@ class SuggestionController extends Controller {
         if ($boardRes == null) {
             abort(404);
         } else {
-            $suggestions = $boardRes->suggestions;
+//            $suggestions = $boardRes->suggestions;
+            $suggestions = Suggestion::orderBy('is_pinned', 'DESC')->where('board_id', $boardRes->id)->get();
             if (Auth::check()) {
                 return view('admin\main', compact('suggestions', 'board'));
             }
@@ -56,6 +57,21 @@ class SuggestionController extends Controller {
     }
 
     public function show($board, Suggestion $suggestion) {
-        return view('user\detail', compact('board', 'suggestion'));
+        if (Auth::check()) {
+            return view('admin\suggestion', compact('board', 'suggestion'));
+        }
+        return view('user\suggestion', compact('board', 'suggestion'));
+    }
+
+    public function pin($board, Suggestion $suggestion) {
+        $suggestion->is_pinned = true;
+        $suggestion->save();
+        return redirect(route('suggestions.index', $board));
+    }
+
+    public function unpin($board, Suggestion $suggestion) {
+        $suggestion->is_pinned = false;
+        $suggestion->save();
+        return redirect(route('suggestions.index', $board));
     }
 }
