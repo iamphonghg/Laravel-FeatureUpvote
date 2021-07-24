@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-
+@section('title', 'You are logged in!')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -15,6 +15,8 @@
                     @endif
 
                     You are logged in!
+                    <br>
+                    Click on Feature Vote to redirect to Feedbacks boards.
                 </div>
             </div>
         </div>

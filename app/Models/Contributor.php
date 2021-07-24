@@ -16,4 +16,8 @@ class Contributor extends Model
     public function suggestions() {
         return $this->hasMany('App\Models\Suggestion');
     }
+
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
 }

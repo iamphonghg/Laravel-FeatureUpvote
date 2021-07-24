@@ -1,10 +1,10 @@
 @extends('layouts.suggestion')
 
-@section('title', "$suggestion->title - $board")
+@section('title', "$suggestion->title - $board->board_name")
 
 @section('content')
     <section class="container">
-        <a href="/boards/{{ $board }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
+        <a href="/boards/{{ $board->short_name }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
@@ -18,9 +18,9 @@
                         <p class="h1">{{ count($suggestion->votes) }}</p>
                         <p>votes</p>
                         @if (strpos($_COOKIE["list_voted_suggestion"], "sgt$suggestion->id-") !== false)
-                            <a href="{{ route('suggestions.devote', [$board, $suggestion->id]) }}" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
+                            <a href="{{ route('suggestions.devote', [$board->short_name, $suggestion->id]) }}" class="btn btn-outline-secondary d-block"><i class="bi bi-check2"></i>Voted up</a>
                         @else
-                            <a href="{{ route('suggestions.vote', [$board, $suggestion->id]) }}" class="btn btn-secondary d-block">Vote</a>
+                            <a href="{{ route('suggestions.vote', [$board->short_name, $suggestion->id]) }}" class="btn btn-secondary d-block">Vote</a>
                         @endif
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         <h3 class="h4">{{ $suggestion->content }}</h3>
                         <p>
                             Suggested by:
-                            <a href="#contributor" class="fw-bold">
+                            <a href="{{ route('contributors.show', [$board->short_name, $suggestion->contributor]) }}" class="fw-bold">
                                 {{ $suggestion->contributor->name }}
                             </a>
                             <span class="fw-bold font-italic">{{ $suggestion->contributor->email }}</span>
@@ -57,12 +57,19 @@
                 @foreach ($comments as $comment)
                     <div class="row border border-top-0">
                         <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
-                        <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
+                        <a href="{{ route('contributors.show', [$board->short_name, $comment->contributor]) }}" class="fw-bold ms-3">{{ $comment->contributor->name }}</a>
                         <p class="d-inline ms-3">{{ $comment->content }}</p>
                     </div>
                 @endforeach
             @endif
-
+            @php
+                $name = $email = $shop_name = '';
+                $lockInfo = 'readonly';
+                $contributor = \App\Models\Contributor::find($_COOKIE['@id']);
+                $name = $contributor->name;
+                $email = $contributor->email;
+                $shop_name = $contributor->shop_name;
+            @endphp
 
             <div class="row border mt-4">
                 <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
@@ -70,7 +77,7 @@
             <div class="row border border-top-0 mb-5">
                 <div class="row mt-3">
                     <div class="col-lg-12 ms-2">
-                        <form method="POST" action="{{ route('suggestions.comment', [$board, $suggestion->id]) }}">
+                        <form method="POST" action="{{ route('suggestions.comment', [$board->short_name, $suggestion->id]) }}">
                             @csrf
                             <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
                             <div class="mb-4 input-group">
@@ -81,19 +88,19 @@
                                 <div class="col-md-4">
                                     <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
                                     <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your name" name="name">
+                                        <input type="text" class="form-control" id="title" placeholder="Your name" name="name" value="{{ $contributor->name }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email" class="form-label"><span class="fw-bold h5">Email</span></label>
                                     <div class="mb-4 input-group">
-                                        <input type="email" class="form-control" id="title" placeholder="Your email" name="email">
+                                        <input type="email" class="form-control" id="title" placeholder="Your email" name="email" value="{{ $contributor->email }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="shop-name" class="form-label"><span class="fw-bold h5">Shop name</span></label>
                                     <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name">
+                                        <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $contributor->shop_name }}" readonly>
                                     </div>
                                 </div>
                             </div>

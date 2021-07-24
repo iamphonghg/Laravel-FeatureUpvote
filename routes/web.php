@@ -3,9 +3,8 @@
         setcookie("list_voted_suggestion", "list:||||", time() + 86400 * 365, "/");
     }
 
-    Route::get('/', 'Admin\AdminController@index');
-    Route::get('/signin', 'Admin\SigninController@index');
-    Route::get('/dashboard', 'Admin\BoardController@index')->name('boards.index')->middleware('auth');
+    Route::get('/', 'Admin\HomeController@index');
+    Route::get('/dashboard', 'Admin\DashboardController@index')->name('boards.index')->middleware('auth');
 
     Route::get('/boards/{board}', 'User\SuggestionController@index')->name('suggestions.index');
     Route::get('/boards/{board}/suggestions', 'User\SuggestionController@store')->name('suggestions.store');
@@ -19,6 +18,8 @@
 
     Route::get('/boards/{board}/suggestions/{suggestion}/pin', 'User\SuggestionController@pin')->name('suggestions.pin');
     Route::get('/boards/{board}/suggestions/{suggestion}/unpin', 'User\SuggestionController@unpin')->name('suggestions.unpin');
+
+    Route::get('/boards/{board}/contributors/{contributor}', 'Admin\ContributorController@show')->name('contributors.show');
 
     Auth::routes();
 

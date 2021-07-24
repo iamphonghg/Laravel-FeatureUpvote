@@ -15,9 +15,12 @@ class CreateBoardsTable extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
             $table->string('board_name');
             $table->string('short_name');
             $table->timestamp('created_at')->useCurrent();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
