@@ -43,7 +43,40 @@
             <div class="list-group">
 
                 @foreach ($suggestions as $suggestion)
-                    @if ($suggestion->status != 'Awaiting approval' and $suggestion->status != 'Deleted')
+                    @if ($suggestion->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id)
+                        <div class="list-group-item py-3" style="opacity: .5">
+                            <div class="row">
+                                <div class="col-3 d-flex">
+                                    <div class="votes p-4 border-end">
+                                        <a href="{{ route('suggestions.show', [$board->short_name, $suggestion]) }}" class="btn">
+                                            <span class="h1">{{ count($suggestion->votes) }}</span>
+                                            <p>votes</p>
+                                            @if (isset($_COOKIE["list_voted_suggestion"]))
+                                                @if (strpos($_COOKIE["list_voted_suggestion"], "sgt$suggestion->id") !== false)
+                                                    <p><i class="bi bi-check2"></i>Voted up</p>
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-9 justify-content-left">
+                                    <div class="infos p-4">
+                                        <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-decoration-none text-dark"><h3 class="h4">{{ $suggestion->title }}</h3></a>
+                                        <p>
+                                            Suggested by:
+                                            <span class="fw-bold">{{ $suggestion->contributor->name }}</span>
+                                            {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
+                                            <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
+                                        </p>
+                                        @if ($suggestion->is_pinned)
+                                            <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
+                                        @endif
+                                        <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->status }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($suggestion->status != 'Awaiting approval' and $suggestion->status != 'Deleted')
                         <div class="list-group-item py-3">
                             <div class="row">
                                 <div class="col-3 d-flex">

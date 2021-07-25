@@ -1,5 +1,7 @@
 @extends('layouts.suggestion')
+@php
 
+@endphp
 @section('title', "$suggestion->title - $board->board_name")
 
 @section('content')
@@ -8,8 +10,8 @@
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        @if (session('message'))
+            <div class="alert alert-success">{{ session('message') }}</div>
         @endif
         <section class="detail-vote container">
             <div class="row border mt-4">
@@ -54,11 +56,30 @@
                 </div>
 
                 @foreach ($comments as $comment)
-                    <div class="row border border-top-0">
-                        <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
-                        <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
-                        <p class="d-inline ms-3">{{ $comment->content }}</p>
-                    </div>
+                    @if ($comment->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $comment->contributor_id)
+                        <div class="row border border-top-0">
+                            <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
+                            <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
+                            @if ($comment->contributor->shop_name == '@dmin')
+                                <p class="">
+                                    <label for="" class="bg-success text-light px-2 py-1 rounded col-1">Admin</label>
+                                </p>
+                            @endif
+                            <p class="d-inline ms-3">{{ $comment->content }}</p>
+                            <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-outline-secondary m-3 w-25">Edit</a>
+                        </div>
+                    @elseif ($comment->status != 'Awaiting approval' and $comment->status != 'Deleted')
+                        <div class="row border border-top-0">
+                            <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
+                            <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
+                            @if ($comment->contributor->shop_name == '@dmin')
+                                <p class="">
+                                    <label for="" class="bg-success text-light px-2 py-1 rounded col-1">Admin</label>
+                                </p>
+                            @endif
+                            <p class="d-inline ms-3">{{ $comment->content }}</p>
+                        </div>
+                    @endif
                 @endforeach
             @endif
 
@@ -71,49 +92,51 @@
                     $shop_name = $contributor->shop_name;
                 }
             @endphp
+            @if ($suggestion->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id)
+                <a href="{{ route('suggestions.edit', [$board->short_name, $suggestion->id]) }}" class="btn btn-outline-secondary m-3">Edit</a>
+            @else
+                <div class="row border mt-4">
+                    <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
+                </div>
+                <div class="row border border-top-0 mb-5">
+                    <div class="row mt-3">
+                        <div class="col-lg-12 ms-2">
+                            <form method="POST" action="{{ route('suggestions.comment', [$board->short_name, $suggestion->id]) }}">
+                                @csrf
+                                <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
+                                <div class="mb-4 input-group">
+                                    <textarea id="query" class="form-control" style="height: 140px" placeholder="Your comment" name="content"></textarea>
+                                </div>
 
-            <div class="row border mt-4">
-                <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
-            </div>
-            <div class="row border border-top-0 mb-5">
-                <div class="row mt-3">
-                    <div class="col-lg-12 ms-2">
-                        <form method="POST" action="{{ route('suggestions.comment', [$board->short_name, $suggestion->id]) }}">
-                            @csrf
-                            <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
-                            <div class="mb-4 input-group">
-                                <textarea id="query" class="form-control" style="height: 140px" placeholder="Your comment" name="content"></textarea>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your name" name="name" value="{{ $name }}">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="text" class="form-control" id="title" placeholder="Your name" name="name" value="{{ $name }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="email" class="form-label"><span class="fw-bold h5">Email</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="email" class="form-control" id="title" placeholder="Your email" name="email" value="{{ $email }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="shop-name" class="form-label"><span class="fw-bold h5">Shop name</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $shop_name }}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="email" class="form-label"><span class="fw-bold h5">Email</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="email" class="form-control" id="title" placeholder="Your email" name="email" value="{{ $email }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="shop-name" class="form-label"><span class="fw-bold h5">Shop name</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $shop_name }}">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="d-flex mb-4 text-center justify-content-end">
-                                <button type="submit" class="btn btn-secondary me-2">Post comment</button>
-                            </div>
-                        </form>
+                                <div class="d-flex mb-4 text-center justify-content-end">
+                                    <button type="submit" class="btn btn-secondary me-2">Post comment</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            @endif
         </section>
 
     </section>

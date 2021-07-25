@@ -1,6 +1,6 @@
 @extends('layouts.suggestion')
 
-@section('title', "View Contributor - $board->board_name")
+@section('title', "User Suggestions - $board->board_name")
 
 @section('content')
 
@@ -46,16 +46,14 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="list-group">
-
+                    @php
+                        $unmoderated = '';
+                    @endphp
                     @foreach ($suggestions as $suggestion)
                         @if ($suggestion->status != 'Deleted')
                             @if ($suggestion->status == 'Awaiting approval')
                                 @php
                                     $unmoderated = "opacity: 0.5";
-                                @endphp
-                            @else
-                                @php
-                                    $unmoderated = '';
                                 @endphp
                             @endif
                         @endif

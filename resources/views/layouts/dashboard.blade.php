@@ -80,7 +80,30 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            <div class="container-fluid">
+                <div class="row">
+                    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                        <div class="position-sticky pt-3">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link active text-dark" aria-current="page" href="#">
+                                        <span data-feather="home"></span>
+                                        <i class="bi bi-list-ul"></i>
+                                        Feedback Boards
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="#">
+                                        <i class="bi bi-person-plus"></i>
+                                        Team
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    @yield('content')
+                </div>
+            </div>
         </main>
     </div>
 </body>

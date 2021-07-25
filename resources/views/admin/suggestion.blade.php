@@ -22,6 +22,7 @@
                         @else
                             <a href="{{ route('suggestions.vote', [$board->short_name, $suggestion->id]) }}" class="btn btn-secondary d-block">Vote</a>
                         @endif
+                        <a href="#" class="btn btn-outline-secondary mt-1">View votes</a>
                     </div>
                 </div>
                 <div class="col-9 justify-content-left">
@@ -42,6 +43,24 @@
                         <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->status }}</label>
                     </div>
                 </div>
+                <div class="control border-top p-1">
+                    <a class="btn btn-outline-secondary" href="{{ route('suggestions.edit', [$board->short_name, $suggestion->id]) }}">Edit</a>
+                    <div class="dropdown d-inline">
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                            Change status
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="book-dropdown">
+                            <li><a href="#" class="dropdown-item">Awaiting approval</a></li>
+                            <li class="dropdown-divider" role="separator"></li>
+                            <li><a href="#" class="dropdown-item">Under consideration</a></li>
+                            <li><a href="#" class="dropdown-item">Planned</a></li>
+                            <li><a href="#" class="dropdown-item">Not planned</a></li>
+                            <li><a href="#" class="dropdown-item">Done</a></li>
+                            <li class="dropdown-divider" role="separator"></li>
+                            <li><a href="#" class="dropdown-item">Deleted</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             @if (count($suggestion->comments) > 0)
@@ -58,6 +77,12 @@
                     <div class="row border border-top-0">
                         <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
                         <a href="{{ route('contributors.show', [$board->short_name, $comment->contributor]) }}" class="fw-bold ms-3">{{ $comment->contributor->name }}</a>
+                        <p class="fst-italic mt-3 ms-3">{{ $comment->contributor->email }}</p>
+                        @if ($comment->contributor->shop_name == '@dmin')
+                            <p class="">
+                                <label for="" class="bg-success text-light px-2 py-1 rounded col-1">Admin</label>
+                            </p>
+                        @endif
                         <p class="d-inline ms-3">{{ $comment->content }}</p>
                     </div>
                 @endforeach

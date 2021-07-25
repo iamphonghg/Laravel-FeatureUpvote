@@ -27,7 +27,6 @@ class CommentController extends Controller {
         }
 
         $board = Board::where('short_name', $board)->first();
-
         $comment = new Comment();
         $comment->content = $request->get('content');
         $comment->suggestion_id = $suggestion->id;
@@ -39,6 +38,24 @@ class CommentController extends Controller {
         }
         $comment->save();
 
-        return redirect(route('suggestions.show', [$board, $suggestion->id]));
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]));
+    }
+
+    public function edit(Comment $comment) {
+        $board = $comment->suggestion->board;
+        $contributor = $comment->contributor;
+        $suggestion = $comment->suggestion;
+        if (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $comment->contributor_id)) {
+            return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', "You can't edit this message!");
+        }
+        return view('user.edit-comment', compact('comment', 'board', 'contributor', 'suggestion'));
+    }
+
+    public function save(Request $request, Comment $comment) {
+        $comment->content = $request->get('content');
+        $comment->save();
+        $board = $comment->suggestion->board;
+        $suggestion = $comment->suggestion;
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]));
     }
 }
