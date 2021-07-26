@@ -9,6 +9,7 @@ use App\Models\Vote;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
+
 class SuggestionController extends Controller {
     public function index($board) {
         $board = Board::where('short_name', $board)->first();
