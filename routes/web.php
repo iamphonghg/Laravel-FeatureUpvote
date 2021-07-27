@@ -13,6 +13,7 @@
     Route::get('/boards/{board}/suggestions/create', 'User\SuggestionController@create')->name('suggestions.create');
     Route::get('/boards/{board}/suggestions/{suggestion}/edit', 'User\SuggestionController@edit')->name('suggestions.edit');
     Route::get('/boards/{board}/suggestions/{suggestion}', 'User\SuggestionController@show')->name('suggestions.show');
+    Route::get('/boards/{board}/suggestions/{suggestion}/save', 'User\SuggestionController@save')->name('suggestions.save');
 
     Route::post('/boards/{board}/suggestions/{suggestion}/comment', 'User\CommentController@store')->name('suggestions.comment');
     Route::get('/comments/{comment}/edit', 'User\CommentController@edit')->name('comments.edit');
