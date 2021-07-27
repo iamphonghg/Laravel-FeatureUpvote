@@ -1,6 +1,13 @@
 @extends('layouts.suggestion')
 @php
-
+    $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
+    $awaitingCommentCount = 0;
+    $currentUserIsAuthor = false;
+    if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id) {
+        $currentUserIsAuthor = true;
+        $awaitingCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Awaiting approval')->where('contributor_id', $_COOKIE['uid'])->count();
+    }
+    $allComments = $suggestion->comments;
 @endphp
 @section('title', "$suggestion->title - $board->board_name")
 
@@ -35,7 +42,7 @@
                                 {{ $suggestion->contributor->name }}
                             </span>
                             {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
-                            <span class="text-secondary">Comments: {{ count($suggestion->comments) }}</span>
+                            <span class="text-secondary">Comments: {{ $approvedCommentCount }}</span>
                         </p>
                         @if ($suggestion->is_pinned)
                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
@@ -43,20 +50,20 @@
                         <label for="" class="bg-dark text-light px-2 py-1 rounded">{{ $suggestion->status }}</label>
                     </div>
                 </div>
+                @if ($suggestion->status == 'Awaiting approval' and $currentUserIsAuthor)
+                    <div class="control border-top p-1">
+                        <a class="btn btn-outline-secondary" href="{{ route('suggestions.edit', [$board->short_name, $suggestion->id]) }}">Edit</a>
+                    </div>
+                @endif
             </div>
 
-            @if (count($suggestion->comments) > 0)
-                @php
-                    {{
-                        $comments = $suggestion->comments;
-                    }}
-                @endphp
+            @if ($currentUserIsAuthor and !($approvedCommentCount == 0 and $awaitingCommentCount == 0))
                 <div class="row border mt-4">
-                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ count($comments) }}</span>
+                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ $approvedCommentCount }}</span>
                 </div>
 
-                @foreach ($comments as $comment)
-                    @if ($comment->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $comment->contributor_id)
+                @foreach ($allComments as $comment)
+                    @if ($comment->status == 'Approved' or (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $comment->contributor_id and $comment->status == 'Awaiting approval'))
                         <div class="row border border-top-0">
                             <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
                             <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
@@ -66,35 +73,27 @@
                                 </p>
                             @endif
                             <p class="d-inline ms-3">{{ $comment->content }}</p>
-                            <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-outline-secondary m-3 w-25">Edit</a>
-                        </div>
-                    @elseif ($comment->status != 'Awaiting approval' and $comment->status != 'Deleted')
-                        <div class="row border border-top-0">
-                            <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
-                            <p class="fw-bold ms-3">{{ $comment->contributor->name }}</p>
-                            @if ($comment->contributor->shop_name == '@dmin')
+                            @if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $comment->contributor_id and $comment->status == 'Awaiting approval')
                                 <p class="">
-                                    <label for="" class="bg-success text-light px-2 py-1 rounded col-1">Admin</label>
+                                    <label for="" class="bg-dark text-light px-2 py-1 rounded col-2 text-wrap-none">Awaiting approval</label>
                                 </p>
+                                <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-outline-secondary m-3 w-25">Edit</a>
                             @endif
-                            <p class="d-inline ms-3">{{ $comment->content }}</p>
                         </div>
                     @endif
                 @endforeach
             @endif
 
-            @php
-                $name = $email = $shop_name = '';
-                if (isset($_COOKIE['uid'])) {
-                    $contributor = \App\Models\Contributor::find($_COOKIE['uid']);
-                    $name = $contributor->name;
-                    $email = $contributor->email;
-                    $shop_name = $contributor->shop_name;
-                }
-            @endphp
-            @if ($suggestion->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id)
-                <a href="{{ route('suggestions.edit', [$board->short_name, $suggestion->id]) }}" class="btn btn-outline-secondary m-3">Edit</a>
-            @else
+            @if ($suggestion->status != 'Awaiting approval' and $suggestion->status != 'Deleted')
+                @php
+                    $name = $email = $shop_name = '';
+                    if (isset($_COOKIE['uid'])) {
+                        $contributor = \App\Models\Contributor::find($_COOKIE['uid']);
+                        $name = $contributor->name;
+                        $email = $contributor->email;
+                        $shop_name = $contributor->shop_name;
+                    }
+                @endphp
                 <div class="row border mt-4">
                     <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
                 </div>
@@ -128,7 +127,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="d-flex mb-4 text-center justify-content-end">
                                     <button type="submit" class="btn btn-secondary me-2">Post comment</button>
                                 </div>
@@ -138,7 +136,5 @@
                 </div>
             @endif
         </section>
-
     </section>
-
 @endsection

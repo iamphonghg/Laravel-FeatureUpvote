@@ -38,7 +38,7 @@ class CommentController extends Controller {
         }
         $comment->save();
 
-        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]));
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', "Your comment was added and is awaiting approval.");
     }
 
     public function edit(Comment $comment) {
@@ -56,6 +56,7 @@ class CommentController extends Controller {
         $comment->save();
         $board = $comment->suggestion->board;
         $suggestion = $comment->suggestion;
+
         return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]));
     }
 }

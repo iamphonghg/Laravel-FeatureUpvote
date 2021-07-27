@@ -3,9 +3,7 @@
 @section('title', "Edit suggestion - $board->board_name")
 
 @php
-    if (!isset($_COOKIE['uid'])) {
-        echo 'vipro';
-    }
+
 @endphp
 
 @section('content')
@@ -21,38 +19,26 @@
                         $title = $suggestion->title;
                         $content = $suggestion->content;
                     @endphp
-                    <form action="{{ route('suggestions.store', [$board->short_name]) }}" method="GET">
+                    <form action="{{ route('suggestions.save', [$board->short_name, $suggestion->id]) }}" method="GET">
                         @csrf
                         <label for="title" class="form-label"><span class="fw-bold h5">Title</span></label>
                         <div class="mb-4 input-group">
                             <input type="text" class="form-control" id="title" placeholder="Your suggestion" name="title" value="{{ $title }}">
                         </div>
-
                         <label for="description" class="form-label"><span class="fw-bold h5">Description</span></label>
                         <div class="mb-4 input-group">
                             <textarea id="query" class="form-control" style="height: 140px" placeholder="Description of your suggestion (optional)" name="content">{{ $content }}</textarea>
                         </div>
-
-
                         <a href="" class="btn btn-outline-secondary mb-4">Add image (optional)</a>
 
                         @php
                             $name = $email = $shop_name = $lockInfo = '';
-                            $contributor = new \App\Models\Contributor();
-                            if (\Illuminate\Support\Facades\Auth::check()) {
-                                if ($suggestion->contributor_id == $_COOKIE['@id']) {
+                            $contributor = $suggestion->contributor;
+                            $name = $contributor->name;
+                            $email = $contributor->email;
+                            $shop_name = $contributor->shop_name;
+                            if ($_COOKIE['@id'] == $contributor->id) {
                                 $lockInfo = 'readonly';
-
-                                }
-                                $contributor = \App\Models\Contributor::find($_COOKIE['@id']);
-                                $name = $contributor->name;
-                                $email = $contributor->email;
-                                $shop_name = $contributor->shop_name;
-                            } elseif (isset($_COOKIE['uid'])) {
-                                $contributor = \App\Models\Contributor::find($_COOKIE['uid']);
-                                $name = $contributor->name;
-                                $email = $contributor->email;
-                                $shop_name = $contributor->shop_name;
                             }
                         @endphp
 

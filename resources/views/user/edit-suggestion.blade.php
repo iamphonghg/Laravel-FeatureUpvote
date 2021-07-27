@@ -56,7 +56,7 @@
                             <div class="col-md-4">
                                 <label for="email" class="form-label"><span class="fw-bold h5">Shop name</span></label>
                                 <div class="mb-4 input-group">
-                                    <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $shopName }}">
+                                    <input type="text" class="form-control" id="title" placeholder="Your shop" name="shopName" value="{{ $shopName }}">
                                 </div>
                             </div>
 

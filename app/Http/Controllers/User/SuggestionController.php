@@ -18,9 +18,9 @@ class SuggestionController extends Controller {
         } else {
             $suggestions = Suggestion::orderBy('is_pinned', 'DESC')->where('board_id', $board->id)->get();
             if (Auth::check()) {
-                return view('admin\board', compact('suggestions', 'board'));
+                return view('admin.board', compact('suggestions', 'board'));
             }
-            return view('user\board', compact('suggestions', 'board'));
+            return view('user.board', compact('suggestions', 'board'));
         }
     }
 
@@ -50,27 +50,14 @@ class SuggestionController extends Controller {
 
         $board = Board::where('short_name', $board)->first();
         $suggestion = new Suggestion();
-        if ($request->isEdited) {
-            $suggestion = Suggestion::find($request->suggestion_id);
-            $suggestion->title = $request->title;
-            $suggestion->content = $request->get('content');
-            $suggestion->contributor_id = $contributor->id;
-            $suggestion->board_id = $board->id;
-            if (Auth::check()) {
-                $suggestion->status = 'Under consideration';
-            }
-        } else {
-            $suggestion->title = $request->title;
-            $suggestion->content = $request->get('content');
-            $suggestion->contributor_id = $contributor->id;
-            $suggestion->board_id = $board->id;
-            if (Auth::check()) {
-                $suggestion->status = 'Under consideration';
-            }
+        $suggestion->title = $request->title;
+        $suggestion->content = $request->get('content');
+        $suggestion->contributor_id = $contributor->id;
+        $suggestion->board_id = $board->id;
+        if (Auth::check()) {
+            $suggestion->status = 'Under consideration';
         }
         $suggestion->save();
-
-        $message = '';
 
         $vote = new Vote();
         $vote->suggestion_id = $suggestion->id;
@@ -80,17 +67,18 @@ class SuggestionController extends Controller {
         $vote->save();
         $newCookieValue = $_COOKIE["list_voted_suggestion"] . "sgt$suggestion->id-vid$vote->id||||";
         setcookie("list_voted_suggestion", $newCookieValue, time() + 86400 * 365, "/");
-        $message = 'Your suggestion was added and is awaiting approval.';
 
-        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', $message);
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', 'Your suggestion was added and is awaiting approval.');
     }
 
     public function show($board, Suggestion $suggestion) {
         $board = Board::where('short_name', $board)->first();
         if (Auth::check()) {
-            return view('admin\suggestion', compact('board', 'suggestion'));
+            return view('admin.suggestion', compact('board', 'suggestion'));
+        } elseif ($suggestion->status == 'Awaiting approval' and (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $suggestion->contributor_id))) {
+            return view('user.suggestion-404', compact('board'));
         }
-        return view('user\suggestion', compact('board', 'suggestion'));
+        return view('user.suggestion', compact('board', 'suggestion'));
     }
 
     public function pin($board, Suggestion $suggestion) {
@@ -118,10 +106,18 @@ class SuggestionController extends Controller {
     }
 
     public function save(Request $request, $board, Suggestion $suggestion) {
-        if (Auth::check()) {
+        $board = Board::where('short_name', $board)->first();
 
-        } else {
+        $suggestion->title = $request->title;
+        $suggestion->content = $request->get('content');
+        $suggestion->save();
 
-        }
+        $contributor = $suggestion->contributor;
+        $contributor->name = $request->name;
+        $contributor->email = $request->email;
+        $contributor->shop_name = $request->shopName;
+        $contributor->save();
+
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', 'Your changes have been saved.');
     }
 }
