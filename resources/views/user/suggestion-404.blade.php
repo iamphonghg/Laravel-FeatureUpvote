@@ -12,6 +12,6 @@
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">Suggestion not found</h1>
-        <h2 class="mt-3">This suggestion is awaiting moderation.</h2>
+        <h2 class="mt-3">This suggestion is awaiting approval.</h2>
     </section>
 @endsection

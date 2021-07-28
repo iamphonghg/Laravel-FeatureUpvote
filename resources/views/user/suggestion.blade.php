@@ -3,10 +3,13 @@
     $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
     $awaitingCommentCount = 0;
     $currentUserIsAuthor = false;
-    if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id) {
-        $currentUserIsAuthor = true;
+    if (isset($_COOKIE['uid'])) {
         $awaitingCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Awaiting approval')->where('contributor_id', $_COOKIE['uid'])->count();
     }
+    if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id) {
+        $currentUserIsAuthor = true;
+    }
+
     $allComments = $suggestion->comments;
 @endphp
 @section('title', "$suggestion->title - $board->board_name")
@@ -17,8 +20,8 @@
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
-        @if (session('message'))
-            <div class="alert alert-success">{{ session('message') }}</div>
+        @if (session('mssg'))
+            <div class="alert alert-success" role="alert">{{ session('mssg') }}</div>
         @endif
         <section class="detail-vote container">
             <div class="row border mt-4">
@@ -57,7 +60,7 @@
                 @endif
             </div>
 
-            @if ($currentUserIsAuthor and !($approvedCommentCount == 0 and $awaitingCommentCount == 0))
+            @if (!($approvedCommentCount == 0 and $awaitingCommentCount == 0))
                 <div class="row border mt-4">
                     <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ $approvedCommentCount }}</span>
                 </div>

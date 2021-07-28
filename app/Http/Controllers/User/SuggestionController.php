@@ -17,7 +17,7 @@ class SuggestionController extends Controller {
             abort(404);
         } else {
             $suggestions = Suggestion::orderBy('is_pinned', 'DESC')->where('board_id', $board->id)->get();
-            if (Auth::check()) {
+            if (Auth::check() and Auth::id() == $board->user_id) {
                 return view('admin.board', compact('suggestions', 'board'));
             }
             return view('user.board', compact('suggestions', 'board'));
@@ -26,8 +26,7 @@ class SuggestionController extends Controller {
 
     public function create($board) {
         $board = Board::where('short_name', $board)->first();
-        $isEdited = false;
-        return view('user\create', compact('board', 'isEdited'));
+        return view('user.create', compact('board'));
     }
 
     public function store(Request $request, $board) {
@@ -68,14 +67,15 @@ class SuggestionController extends Controller {
         $newCookieValue = $_COOKIE["list_voted_suggestion"] . "sgt$suggestion->id-vid$vote->id||||";
         setcookie("list_voted_suggestion", $newCookieValue, time() + 86400 * 365, "/");
 
-        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', 'Your suggestion was added and is awaiting approval.');
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('mssg', 'Your suggestion was added and is awaiting approval.');
     }
 
     public function show($board, Suggestion $suggestion) {
         $board = Board::where('short_name', $board)->first();
-        if (Auth::check()) {
+        if (Auth::check() and Auth::id() == $board->user_id) {
             return view('admin.suggestion', compact('board', 'suggestion'));
         } elseif ($suggestion->status == 'Awaiting approval' and (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $suggestion->contributor_id))) {
+            // if suggestion is awaiting approval and user is not contributor of this suggestion, return 404
             return view('user.suggestion-404', compact('board'));
         }
         return view('user.suggestion', compact('board', 'suggestion'));
@@ -96,28 +96,26 @@ class SuggestionController extends Controller {
     }
     public function edit($board, Suggestion $suggestion) {
         $board = Board::where('short_name', $board)->first();
-        if (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $suggestion->contributor_id)) {
-            return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', "You don't have permission to edit this");
+        if (Auth::check() and Auth::id() == $board->user_id) {
+            return view('admin.edit-suggestion', compact('board', 'suggestion'));
+        } elseif (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $suggestion->contributor_id)) {
+            return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('mssg', "You don't have permission to edit this");
         }
-        if (Auth::check()) {
-            return view('admin\edit-suggestion', compact('board', 'suggestion'));
-        }
-        return view('user\edit-suggestion', compact('board', 'suggestion'));
+        return view('user.edit-suggestion', compact('board', 'suggestion'));
     }
 
     public function save(Request $request, $board, Suggestion $suggestion) {
         $board = Board::where('short_name', $board)->first();
-
         $suggestion->title = $request->title;
         $suggestion->content = $request->get('content');
         $suggestion->save();
-
-        $contributor = $suggestion->contributor;
-        $contributor->name = $request->name;
-        $contributor->email = $request->email;
-        $contributor->shop_name = $request->shopName;
-        $contributor->save();
-
-        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', 'Your changes have been saved.');
+        if (!(Auth::check() and Auth::id() == $board->user_id and $_COOKIE['@id'] != $suggestion->contributor_id)) {
+            $contributor = $suggestion->contributor;
+            $contributor->name = $request->name;
+            $contributor->email = $request->email;
+            $contributor->shop_name = $request->shopName;
+            $contributor->save();
+        }
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('mssg', 'Your changes have been saved.');
     }
 }

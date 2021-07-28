@@ -8,8 +8,8 @@
             <i class="bi bi-arrow-left"></i>All suggestions
         </a>
         <h1 class="mt-3">{{ $suggestion->title }}</h1>
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        @if (session('mssg'))
+            <div class="alert alert-success" role="alert">{{ session('mssg') }}</div>
         @endif
         <section class="detail-vote container">
             <div class="row border mt-4">

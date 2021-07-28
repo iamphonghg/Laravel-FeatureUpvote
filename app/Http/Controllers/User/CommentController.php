@@ -38,7 +38,7 @@ class CommentController extends Controller {
         }
         $comment->save();
 
-        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', "Your comment was added and is awaiting approval.");
+        return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('mssg', "Your comment was added and is awaiting approval.");
     }
 
     public function edit(Comment $comment) {
@@ -46,7 +46,7 @@ class CommentController extends Controller {
         $contributor = $comment->contributor;
         $suggestion = $comment->suggestion;
         if (!isset($_COOKIE['uid']) or (isset($_COOKIE['uid']) and $_COOKIE['uid'] != $comment->contributor_id)) {
-            return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('message', "You can't edit this message!");
+            return redirect(route('suggestions.show', [$board->short_name, $suggestion->id]))->with('mssg', "You can't edit this message!");
         }
         return view('user.edit-comment', compact('comment', 'board', 'contributor', 'suggestion'));
     }
