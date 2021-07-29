@@ -2,6 +2,10 @@
 
 @section('title', "$suggestion->title - $board->board_name")
 
+@php
+    $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
+    $allComments = $suggestion->comments;
+@endphp
 @section('content')
     <section class="container">
         <a href="/boards/{{ $board->short_name }}" class="back text-secondary fw-bold h4 text-decoration-none mt-3">
@@ -35,7 +39,7 @@
                             </a>
                             <span class="fw-bold font-italic">{{ $suggestion->contributor->email }}</span>
                             {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Voted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
-                            <span class="text-secondary">Comments: {{ count($suggestion->comments) }}</span>
+                            <span class="text-secondary">Comments: {{ $approvedCommentCount }}</span>
                         </p>
                         @if ($suggestion->is_pinned)
                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
@@ -63,17 +67,13 @@
                 </div>
             </div>
 
-            @if (count($suggestion->comments) > 0)
-                @php
-                    {{
-                        $comments = $suggestion->comments;
-                    }}
-                @endphp
+            @if (count($allComments) > 0)
+
                 <div class="row border mt-4">
-                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ count($comments) }}</span>
+                    <span class="m-3"><i class="bi bi-chat-left-dots me-2"></i>Comments: {{ $approvedCommentCount }}</span>
                 </div>
 
-                @foreach ($comments as $comment)
+                @foreach ($allComments as $comment)
                     <div class="row border border-top-0">
                         <p class="fst-italic mt-3 ms-3">{{ date("d M 'y", strtotime($comment->created_at)) }}</p>
                         <a href="{{ route('contributors.show', [$board->short_name, $comment->contributor]) }}" class="fw-bold ms-3">{{ $comment->contributor->name }}</a>
@@ -84,6 +84,30 @@
                             </p>
                         @endif
                         <p class="d-inline ms-3">{{ $comment->content }}</p>
+                        @if ($comment->status == 'Awaiting approval')
+                            <p class="">
+                                <label for="" class="bg-dark text-light px-2 py-1 rounded col-2 text-wrap-none">Awaiting approval</label>
+                            </p>
+                        @endif
+                        <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-outline-secondary m-3 w-25">Edit</a>
+                        @php
+                            $isActive1 = $isActive2 = $isActive3 = $isActive4 = '';
+                            if ($suggestion->status == 'Awaiting approval') {
+                                $isActive1 = 'active';
+                            } elseif ($suggestion->status == 'Approved') {
+                                $isActive2 = 'active';
+                            } elseif ($suggestion->status == 'Deleted') {
+                                $isActive3 = 'active';
+                            } elseif ($suggestion->status == 'Spam') {
+                                $isActive4 = 'active';
+                            }
+                        @endphp
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive1 }}>Awaiting approval</a>
+                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive2 }}>Approved</a>
+                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive3 }}>Deleted</a>
+                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive4 }}>Spam</a>
+                        </div>
                     </div>
                 @endforeach
             @endif
@@ -96,48 +120,49 @@
                 $shop_name = $contributor->shop_name;
             @endphp
 
-            <div class="row border mt-4">
-                <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
-            </div>
-            <div class="row border border-top-0 mb-5">
-                <div class="row mt-3">
-                    <div class="col-lg-12 ms-2">
-                        <form method="POST" action="{{ route('suggestions.comment', [$board->short_name, $suggestion->id]) }}">
-                            @csrf
-                            <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
-                            <div class="mb-4 input-group">
-                                <textarea id="query" class="form-control" style="height: 140px" placeholder="Your comment" name="content"></textarea>
-                            </div>
+            @if ($suggestion->status != 'Awaiting approval' and $suggestion->status != 'Deleted')
+                <div class="row border mt-4">
+                    <span class="m-3"><i class="bi bi-plus-square me-2"></i>Add a comment</span>
+                </div>
+                <div class="row border border-top-0 mb-5">
+                    <div class="row mt-3">
+                        <div class="col-lg-12 ms-2">
+                            <form method="POST" action="{{ route('suggestions.comment', [$board->short_name, $suggestion->id]) }}">
+                                @csrf
+                                <label for="description" class="form-label"><span class="fw-bold h5">Message</span></label>
+                                <div class="mb-4 input-group">
+                                    <textarea id="query" class="form-control" style="height: 140px" placeholder="Your comment" name="content"></textarea>
+                                </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your name" name="name" value="{{ $contributor->name }}" readonly>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="name" class="form-label"><span class="fw-bold h5">Name</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="text" class="form-control" id="title" placeholder="Your name" name="name" value="{{ $contributor->name }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="email" class="form-label"><span class="fw-bold h5">Email</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="email" class="form-control" id="title" placeholder="Your email" name="email" value="{{ $contributor->email }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="shop-name" class="form-label"><span class="fw-bold h5">Shop name</span></label>
+                                        <div class="mb-4 input-group">
+                                            <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $contributor->shop_name }}" readonly>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="email" class="form-label"><span class="fw-bold h5">Email</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="email" class="form-control" id="title" placeholder="Your email" name="email" value="{{ $contributor->email }}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="shop-name" class="form-label"><span class="fw-bold h5">Shop name</span></label>
-                                    <div class="mb-4 input-group">
-                                        <input type="text" class="form-control" id="title" placeholder="Your shop" name="shop_name" value="{{ $contributor->shop_name }}" readonly>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="d-flex mb-4 text-center justify-content-end">
-                                <button type="submit" class="btn btn-secondary me-2">Post comment</button>
-                            </div>
-                        </form>
+                                <div class="d-flex mb-4 text-center justify-content-end">
+                                    <button type="submit" class="btn btn-secondary me-2">Post comment</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            @endif
         </section>
 
     </section>

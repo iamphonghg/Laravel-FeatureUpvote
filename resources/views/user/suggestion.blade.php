@@ -1,18 +1,20 @@
 @extends('layouts.suggestion')
-@php
-    $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
-    $awaitingCommentCount = 0;
-    $currentUserIsAuthor = false;
-    if (isset($_COOKIE['uid'])) {
-        $awaitingCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Awaiting approval')->where('contributor_id', $_COOKIE['uid'])->count();
-    }
-    if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id) {
-        $currentUserIsAuthor = true;
-    }
 
-    $allComments = $suggestion->comments;
-@endphp
 @section('title', "$suggestion->title - $board->board_name")
+
+@php
+        $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
+        $awaitingCommentCount = 0;
+        $currentUserIsAuthor = false;
+        if (isset($_COOKIE['uid'])) {
+            $awaitingCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Awaiting approval')->where('contributor_id', $_COOKIE['uid'])->count();
+        }
+        if (isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id) {
+            $currentUserIsAuthor = true;
+        }
+
+        $allComments = $suggestion->comments;
+@endphp
 
 @section('content')
     <section class="container">
