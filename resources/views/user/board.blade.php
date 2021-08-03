@@ -43,6 +43,9 @@
             <div class="list-group">
 
                 @foreach ($suggestions as $suggestion)
+                    @php
+                        $approvedCommentCount = \App\Models\Comment::where('suggestion_id', $suggestion->id)->where('status', 'Approved')->count();
+                    @endphp
                     @if ($suggestion->status == 'Awaiting approval' and isset($_COOKIE['uid']) and $_COOKIE['uid'] == $suggestion->contributor_id)
                         <div class="list-group-item py-3" style="opacity: .5">
                             <div class="row">
@@ -66,7 +69,7 @@
                                             Suggested by:
                                             <span class="fw-bold">{{ $suggestion->contributor->name }}</span>
                                             {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
-                                            <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
+                                            <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-secondary">Comments: {{ $approvedCommentCount }}</a>
                                         </p>
                                         @if ($suggestion->is_pinned)
                                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>
@@ -99,7 +102,7 @@
                                             Suggested by:
                                             <span class="fw-bold">{{ $suggestion->contributor->name }}</span>
                                             {{ date("d M 'y", strtotime($suggestion->created_at)) }} | Upvoted: {{ date("d M 'y", strtotime($suggestion->last_voted_at)) }} |
-                                            <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-secondary">Comments: {{ count($suggestion->comments) }}</a>
+                                            <a href="{{ route('suggestions.show', [$board->short_name, $suggestion->id]) }}" class="text-secondary">Comments: {{ $approvedCommentCount }}</a>
                                         </p>
                                         @if ($suggestion->is_pinned)
                                             <label for="" class="bg-success text-light px-2 py-1 rounded">Pinned</label>

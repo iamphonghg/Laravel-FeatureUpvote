@@ -92,21 +92,21 @@
                         <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-outline-secondary m-3 w-25">Edit</a>
                         @php
                             $isActive1 = $isActive2 = $isActive3 = $isActive4 = '';
-                            if ($suggestion->status == 'Awaiting approval') {
+                            if ($comment->status == 'Awaiting approval') {
                                 $isActive1 = 'active';
-                            } elseif ($suggestion->status == 'Approved') {
+                            } elseif ($comment->status == 'Approved') {
                                 $isActive2 = 'active';
-                            } elseif ($suggestion->status == 'Deleted') {
+                            } elseif ($comment->status == 'Deleted') {
                                 $isActive3 = 'active';
-                            } elseif ($suggestion->status == 'Spam') {
+                            } elseif ($comment->status == 'Spam') {
                                 $isActive4 = 'active';
                             }
                         @endphp
                         <div class="btn-group" role="group">
-                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive1 }}>Awaiting approval</a>
-                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive2 }}>Approved</a>
-                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive3 }}>Deleted</a>
-                            <a class="btn btn-xss btn-outline-secondary" href="" {{ $isActive4 }}>Spam</a>
+                            <a class="btn btn-xss btn-outline-secondary"  {{ $isActive1 }}>Awaiting approval</a>
+                            <a class="btn btn-xss btn-outline-secondary"  {{ $isActive2 }}>Approved</a>
+                            <a class="btn btn-xss btn-outline-secondary"  {{ $isActive3 }}>Deleted</a>
+                            <a class="btn btn-xss btn-outline-secondary"  {{ $isActive4 }}>Spam</a>
                         </div>
                     </div>
                 @endforeach
