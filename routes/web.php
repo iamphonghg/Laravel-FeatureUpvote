@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SuggestionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::view('/suggestion', 'show');
+Route::get('/', [SuggestionController::class, 'index'])->name('suggestion.index');
+Route::get('/suggestions/{suggestion:slug}', [SuggestionController::class, 'show'])->name('suggestion.show');
 
 require __DIR__.'/auth.php';
