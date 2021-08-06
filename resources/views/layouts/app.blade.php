@@ -11,17 +11,17 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <livewire:styles/>
+        <livewire:styles />
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans font-semibold bg-gray-background text-gray-900 text-sm">
         <header class="flex flex-col md:flex-row items-center justify-between px-8 py-4">
             <div class="flex items-center">
-                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" />
                 </svg>
-                <a href="#" class="text-2xl px-1">Feature Vote</a>
+                <a href="#" class="text-3xl px-1">Feature Vote</a>
             </div>
             <div class="flex items-center mt-2 md:mt-0">
                 @if (Route::has('login'))
@@ -30,7 +30,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
-                                <a 
+                                <a
                                     href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                 this.closest('form').submit();"
@@ -40,14 +40,14 @@
                                 </a>
                             </form>
                         @else
-                            <a 
-                                href="{{ route('login') }}" 
+                            <a
+                                href="{{ route('login') }}"
                                 class="w-28 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Log in
                             </a>
 
                             @if (Route::has('register'))
-                                <a 
-                                    href="{{ route('register') }}" 
+                                <a
+                                    href="{{ route('register') }}"
                                     class="w-28 ml-4 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Register
                                 </a>
                             @endif
@@ -67,44 +67,19 @@
                         <h3 class="text-lg font-bold">Add a suggestion</h3>
                         <p class="text-sm mt-4">Let us know what you would like and we'll take a look over!</p>
                     </div>
-                    <form action="#" method="POST" class="space-y-4 px-4 py-6">
-                        <div>
-                            <input type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Your Suggestion" name="title">
-                        </div>
-                        <div>
-                            <select name="categoryAdd" id="categoryAdd" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm">
-                                <option value="Category One">Category One</option>
-                                <option value="Category Two">Category Two</option>
-                                <option value="Category Three">Category Three</option>
-                                <option value="Category Four">Category Four</option>
-                            </select>
-                        </div>
-                        <div>
-                            <textarea name="content" id="content" cols="30" rows="4" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Describe your suggestion"></textarea>
-                        </div>
-                        <div class="flex items-center justify-between space-x-3">
-                            <button type="button" class="flex items-center justify-center w-1/2 bg-gray-200 font-bold h-11 text-sm rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">
-                                <svg class="text-gray-600 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                </svg>
-                                <span class="ml-1">Attach</span>
-                            </button>
-                            <button type="submit" class="flex items-center justify-center w-1/2 bg-blue font-bold h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">Post</button>
-                        </div>
-                    </form>
+                    <livewire:create-suggestion />
                 </div>
             </div>
             <div class="w-full px-2 md:px-0 md:w-175">
-                <nav class="hidden md:flex items-center justify-between text-xs">
+                <nav class="hidden md:flex items-center justify-between text-sm">
                     <ul class="flex uppercase font-bold border-b-4 pb-3 space-x-10">
-                        <li><a href="" class="border-b-4 pb-3 border-blue">All (10)</a></li>
-                        <li><a href="" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Considering (5)</a></li>
-                        <li><a href="" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Planned (6)</a></li>
-                        <li><a href="" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Not planned (7)</a></li>
+                        <li><a href="#" class="border-b-4 pb-3 border-blue">All (10)</a></li>
+                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Considering (5)</a></li>
+                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Planned (6)</a></li>
                     </ul>
                     <ul class="flex uppercase font-bold border-b-4 pb-3 space-x-10">
-                        <li><a href="" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Testing (7)</a></li>
-                        <li><a href="" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Done (6)</a></li>
+                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Not planned (7)</a></li>
+                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Done (6)</a></li>
                     </ul>
                 </nav>
 
@@ -113,6 +88,6 @@
                 </div>
             </div>
         </main>
-        <livewire:scripts/>
+        <livewire:scripts />
     </body>
 </html>

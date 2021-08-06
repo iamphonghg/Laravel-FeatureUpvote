@@ -7,6 +7,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPUnit\Framework\returnSelf;
+
 class Suggestion extends Model {
     use HasFactory, Sluggable;
 
@@ -28,5 +30,17 @@ class Suggestion extends Model {
 
     public function contributor() {
         return $this->belongsTo(Contributor::class);
+    }
+
+    public function getStatusClasses() {
+        $allStatuses = [
+            'Awaiting' => 'bg-gray-200',
+            'Considering' => 'bg-blue text-white',
+            'Planned' => 'bg-purple text-white',
+            'Not planned' => 'bg-yellow text-white',
+            'Done' => 'bg-green text-white',
+            'Deleted' => 'bg-red text-white'
+        ];
+        return $allStatuses[$this->status];
     }
 }

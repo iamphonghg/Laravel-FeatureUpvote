@@ -12,7 +12,7 @@
         <div class="flex flex-col md:flex-row md:flex-1 px-0 md:px-5 py-4 md:py-6">
             <div class="flex-none mx-4 md:mx-0">
                 <a href="#">
-                    <img src="https://source.unsplash.com/200x200/?face&crop=face&v=1" alt="avatar" class="w-14 h-14 rounded-xl">
+                    <img src="{{ $suggestion->contributor->getAvatar() }}" alt="avatar" class="w-14 h-14 rounded-xl">
                 </a>
             </div>
             <div class="w-full flex flex-col justify-between mx-4 md:mx-5">
@@ -31,7 +31,7 @@
                         <div class="text-gray-900">3 Comments</div>
                     </div>
                     <div class="flex items-center space-x-2 mt-4 md:mt-0">
-                        <div class="bg-gray-200 font-extrabold text-xs uppercase rounded-full text-center px-4 w-28 h-7 py-2 leading-none">Open</div>
+                        <div class="{{ $suggestion->getStatusClasses() }} font-extrabold text-xs uppercase rounded-full text-center px-4 w-32 h-7 py-2 leading-none">{{ $suggestion->status }}</div>
                         <div x-data="{ isOpen: false }" class="relative">
                             <button @click="isOpen = !isOpen" class="bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3">
                                 <svg fill="currentColor" width="24" height="6">

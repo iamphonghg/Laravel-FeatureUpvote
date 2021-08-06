@@ -19,6 +19,7 @@ class CreateSuggestionsTable extends Migration
             $table->string('title');
             $table->string('slug')->nullable();
             $table->text('description');
+            $table->string('status');
             $table->boolean('is_pinned')->default(false);
             $table->timestamps();
         });

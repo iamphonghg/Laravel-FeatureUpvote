@@ -6,8 +6,7 @@ use App\Models\Contributor;
 use App\Models\Suggestion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SuggestionFactory extends Factory
-{
+class SuggestionFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -20,12 +19,15 @@ class SuggestionFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
+        $status = ['Awaiting', 'Considering', 'Planned', 'Not planned', 'Done', 'Deleted'];
+        $randomInteger = rand(0, 5);
+
         return [
             'contributor_id' => Contributor::factory(),
             'title' => ucwords($this->faker->words(4, true)),
             'description' => $this->faker->paragraph(5),
+            'status' => $status[$randomInteger],
         ];
     }
 }
