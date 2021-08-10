@@ -15,6 +15,11 @@ class CreateVotesTable extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
+            $table->unique(['suggestion_id', 'contributor_id']);
+            $table->foreignId('suggestion_id')->constrained();
+            $table->foreignId('contributor_id')->constrained();
+            $table->string('ip')->nullable();
+            $table->string('user_agent')->nullable();
             $table->timestamps();
         });
     }

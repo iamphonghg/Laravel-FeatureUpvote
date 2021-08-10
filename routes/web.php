@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+if (!isset($_COOKIE["voted_suggestion_list"])) {
+    setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
+}
 
 Route::get('/', [SuggestionController::class, 'index'])->name('suggestion.index');
 Route::get('/suggestions/{suggestion:slug}', [SuggestionController::class, 'show'])->name('suggestion.show');

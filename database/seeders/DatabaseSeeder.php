@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Contributor;
 use App\Models\Suggestion;
+use App\Models\Vote;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -23,6 +24,19 @@ class DatabaseSeeder extends Seeder {
             'email' => 'gioxoay.xp@gmail.com',
             'shop_name' => '@dmin'
         ]);
-        Suggestion::factory(30)->create();
+        Contributor::factory(18)->create();
+        Suggestion::factory(100)->create();
+
+        // generate unique votes. Ensure suggestion_id and contributor_id are unique for each row
+        foreach (range(1, 20) as $contributor_id) {
+            foreach (range(1, 100) as $suggestion_id) {
+                if ($suggestion_id % 2 === 0) {
+                    Vote::factory()->create([
+                        'contributor_id' => $contributor_id,
+                        'suggestion_id' => $suggestion_id
+                    ]);
+                }
+            }
+        }
     }
 }

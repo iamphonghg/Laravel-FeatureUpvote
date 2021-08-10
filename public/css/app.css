@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
-
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap);
 /*! tailwindcss v2.2.7 | MIT License | https://tailwindcss.com */
 
 /*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
@@ -35,10 +34,8 @@ html {
 */
 
 html {
-  line-height: 1.15;
-  /* 1 */
-  -webkit-text-size-adjust: 100%;
-  /* 2 */
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /*
@@ -82,10 +79,8 @@ Grouping content
 */
 
 hr {
-  height: 0;
-  /* 1 */
-  color: inherit;
-  /* 2 */
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
 }
 
 /*
@@ -126,10 +121,8 @@ pre {
 		Consolas,
 		'Liberation Mono',
 		Menlo,
-		monospace;
-  /* 1 */
-  font-size: 1em;
-  /* 2 */
+		monospace; /* 1 */
+  font-size: 1em; /* 2 */
 }
 
 /**
@@ -171,10 +164,8 @@ Tabular data
 */
 
 table {
-  text-indent: 0;
-  /* 1 */
-  border-color: inherit;
-  /* 2 */
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
 }
 
 /*
@@ -192,14 +183,10 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit;
-  /* 1 */
-  font-size: 100%;
-  /* 1 */
-  line-height: 1.15;
-  /* 1 */
-  margin: 0;
-  /* 2 */
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
 }
 
 /**
@@ -208,8 +195,7 @@ Remove the inheritance of text transform in Edge and Firefox.
 */
 
 button,
-select {
-  /* 1 */
+select { /* 1 */
   text-transform: none;
 }
 
@@ -281,10 +267,8 @@ Correct the cursor style of increment and decrement buttons in Safari.
 */
 
 [type='search'] {
-  -webkit-appearance: textfield;
-  /* 1 */
-  outline-offset: -2px;
-  /* 2 */
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
 }
 
 /**
@@ -301,10 +285,8 @@ Remove the inner padding in Chrome and Safari on macOS.
 */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button;
-  /* 1 */
-  font: inherit;
-  /* 2 */
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
 }
 
 /*
@@ -375,10 +357,8 @@ ul {
  */
 
 html {
-  font-family: 'Open Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  /* 1 */
-  line-height: 1.5;
-  /* 2 */
+  font-family: 'Open Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
+  line-height: 1.5; /* 2 */
 }
 
 /**
@@ -420,14 +400,10 @@ body {
 *,
 ::before,
 ::after {
-  box-sizing: border-box;
-  /* 1 */
-  border-width: 0;
-  /* 2 */
-  border-style: solid;
-  /* 2 */
-  border-color: currentColor;
-  /* 2 */
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: currentColor; /* 2 */
 }
 
 /*
@@ -558,10 +534,8 @@ audio,
 iframe,
 embed,
 object {
-  display: block;
-  /* 1 */
-  vertical-align: middle;
-  /* 2 */
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
 }
 
 /**
@@ -23012,170 +22986,6 @@ select{
   --tw-placeholder-opacity: 1;
 }
 
-.caret-transparent{
-  caret-color: transparent;
-}
-
-.caret-current{
-  caret-color: currentColor;
-}
-
-.caret-black{
-  caret-color: #000;
-}
-
-.caret-white{
-  caret-color: #fff;
-}
-
-.caret-gray-50{
-  caret-color: #fafafa;
-}
-
-.caret-gray-100{
-  caret-color: #f5f5f5;
-}
-
-.caret-gray-200{
-  caret-color: #e5e5e5;
-}
-
-.caret-gray-300{
-  caret-color: #d4d4d4;
-}
-
-.caret-gray-400{
-  caret-color: #a3a3a3;
-}
-
-.caret-gray-500{
-  caret-color: #737373;
-}
-
-.caret-gray-600{
-  caret-color: #525252;
-}
-
-.caret-gray-700{
-  caret-color: #404040;
-}
-
-.caret-gray-800{
-  caret-color: #262626;
-}
-
-.caret-gray-900{
-  caret-color: #171717;
-}
-
-.caret-red{
-  caret-color: #ec454f;
-}
-
-.caret-yellow{
-  caret-color: #ffc73c;
-}
-
-.caret-green{
-  caret-color: #1aab8b;
-}
-
-.caret-blue{
-  caret-color: #328af1;
-}
-
-.caret-indigo-50{
-  caret-color: #eef2ff;
-}
-
-.caret-indigo-100{
-  caret-color: #e0e7ff;
-}
-
-.caret-indigo-200{
-  caret-color: #c7d2fe;
-}
-
-.caret-indigo-300{
-  caret-color: #a5b4fc;
-}
-
-.caret-indigo-400{
-  caret-color: #818cf8;
-}
-
-.caret-indigo-500{
-  caret-color: #6366f1;
-}
-
-.caret-indigo-600{
-  caret-color: #4f46e5;
-}
-
-.caret-indigo-700{
-  caret-color: #4338ca;
-}
-
-.caret-indigo-800{
-  caret-color: #3730a3;
-}
-
-.caret-indigo-900{
-  caret-color: #312e81;
-}
-
-.caret-purple{
-  caret-color: #8b60ed;
-}
-
-.caret-pink-50{
-  caret-color: #fdf2f8;
-}
-
-.caret-pink-100{
-  caret-color: #fce7f3;
-}
-
-.caret-pink-200{
-  caret-color: #fbcfe8;
-}
-
-.caret-pink-300{
-  caret-color: #f9a8d4;
-}
-
-.caret-pink-400{
-  caret-color: #f472b6;
-}
-
-.caret-pink-500{
-  caret-color: #ec4899;
-}
-
-.caret-pink-600{
-  caret-color: #db2777;
-}
-
-.caret-pink-700{
-  caret-color: #be185d;
-}
-
-.caret-pink-800{
-  caret-color: #9d174d;
-}
-
-.caret-pink-900{
-  caret-color: #831843;
-}
-
-.caret-gray-background{
-  caret-color: #f7f8fc;
-}
-
-.caret-blue-hover{
-  caret-color: #2879bd;
-}
-
 .opacity-0{
   opacity: 0;
 }
@@ -26071,10 +25881,6 @@ select{
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.content-none{
-  content: none;
-}
-
 .line-clamp-1{
   overflow: hidden;
   display: -webkit-box;
@@ -26121,8 +25927,7 @@ select{
   -webkit-line-clamp: unset;
 }
 
-[x-cloak] {
-  display: none !important;
+[x-cloak] { display: none !important;
 }
 
 /* vertical line to the left of the comments */

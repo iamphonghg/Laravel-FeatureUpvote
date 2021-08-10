@@ -22,6 +22,7 @@ class CreateSuggestionsTable extends Migration
             $table->string('status');
             $table->boolean('is_pinned')->default(false);
             $table->timestamps();
+            $table->timestamp('last_voted_at')->useCurrent();
         });
     }
 

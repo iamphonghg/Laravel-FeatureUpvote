@@ -6,18 +6,17 @@ use App\Models\Suggestion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contributor extends Model
-{
+class Contributor extends Model {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'shop_name',
-    ];
+    protected $guarded = [];
 
     public function suggesitons() {
         return $this->hasMany(Suggestion::class);
+    }
+
+    public function votes() {
+        return $this->belongsToMany(Suggestion::class, 'votes');
     }
 
     public function getAvatar() {

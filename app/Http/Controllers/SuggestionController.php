@@ -18,6 +18,7 @@ class SuggestionController extends Controller {
                 ['status', '!=', 'Deleted']
             ])
             ->with('contributor')
+            ->withCount('votes')
             ->orderBy('id', 'desc')
             ->simplePaginate(10),
         ]);
@@ -53,6 +54,7 @@ class SuggestionController extends Controller {
     public function show(Suggestion $suggestion) {
         return view('suggestion.show', [
             'suggestion' => $suggestion,
+            'votesCount' => $suggestion->votes()->count()
         ]);
     }
 

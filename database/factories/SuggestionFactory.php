@@ -24,7 +24,7 @@ class SuggestionFactory extends Factory {
         $randomInteger = rand(0, 5);
 
         return [
-            'contributor_id' => Contributor::factory(),
+            'contributor_id' => $this->faker->numberBetween(1, 20),
             'title' => ucwords($this->faker->words(4, true)),
             'description' => $this->faker->paragraph(5),
             'status' => $status[$randomInteger],
