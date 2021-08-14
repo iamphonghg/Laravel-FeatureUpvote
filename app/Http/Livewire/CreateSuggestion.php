@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Board;
 use App\Models\Contributor;
 use App\Models\Suggestion;
 use Livewire\Component;
@@ -12,6 +13,7 @@ class CreateSuggestion extends Component {
     public $name;
     public $shopName;
     public $email;
+    public $urlName;
 
     protected $rules = [
         'title' => 'required|min-4',
@@ -22,12 +24,15 @@ class CreateSuggestion extends Component {
 
     public function createSuggestion() {
         // $this->validate();  ---error
+        $boardId = Board::where('url_name', $this->urlName)->first()->id;
+
         $contributor = new Contributor();
         if (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
             $contributor->name = $this->name;
             $contributor->shop_name = $this->shopName;
             $contributor->email = $this->email;
+            $contributor->save();
         } else {
             $contributor = Contributor::create([
                 'name' => $this->name,
@@ -38,13 +43,15 @@ class CreateSuggestion extends Component {
         }
         Suggestion::create([
             'contributor_id' => $contributor->id,
+            'board_id' => $boardId,
             'title' => $this->title,
             'description' => $this->description,
-            'status' => 'Considering',
+            'status' => 'considering',
         ]);
         session()->flash('successMessage', 'Suggestion was successfully added.');
+        $board = $this->urlName;    // after use reset(), urlName will disappear
         $this->reset();
-        return redirect()->route('suggestion.index');
+        return redirect()->route('suggestion.index', $board);
     }
 
     public function render() {

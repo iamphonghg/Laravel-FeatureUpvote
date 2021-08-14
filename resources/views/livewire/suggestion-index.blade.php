@@ -43,7 +43,7 @@
         </div>
         <div class="w-full flex flex-col justify-between mx-4 md:mx-5">
             <h4 class="text-xl font-bold mt-2 md:mt-0">
-                <a href="{{ route('suggestion.show', $suggestion) }}" class="suggestion-link hover:underline">{{ $suggestion->title }}</a>
+                <a href="{{ route('suggestion.show', [$urlName, $suggestion]) }}" class="suggestion-link hover:underline">{{ $suggestion->title }}</a>
             </h4>
             <div class="text-gray-600 mt-3 line-clamp-3">
                 {{ $suggestion->description }}

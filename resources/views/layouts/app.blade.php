@@ -67,24 +67,19 @@
                         <h3 class="text-lg font-bold">Add a suggestion</h3>
                         <p class="text-sm mt-4">Let us know what you would like and we'll take a look over!</p>
                     </div>
-                    <livewire:create-suggestion />
+                    <livewire:create-suggestion
+                        :urlName="$urlName"
+                    />
+
                 </div>
             </div>
             <div class="w-full px-2 md:px-0 md:w-175">
-                <nav class="hidden md:flex items-center justify-between text-sm">
-                    <ul class="flex uppercase font-bold border-b-4 pb-3 space-x-10">
-                        <li><a href="#" class="border-b-4 pb-3 border-blue">All (10)</a></li>
-                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Considering (5)</a></li>
-                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Planned (6)</a></li>
-                    </ul>
-                    <ul class="flex uppercase font-bold border-b-4 pb-3 space-x-10">
-                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Not planned (7)</a></li>
-                        <li><a href="#" class="text-gray-400 transition duration-150 ease-in border-b-4 pb-3 hover:border-blue">Done (6)</a></li>
-                    </ul>
-                </nav>
+                <livewire:status-filters
+                    :urlName="$urlName"
+                />
 
                 <div class="mt-8">
-                    {{ $slot }}
+                    @yield('content')
                 </div>
             </div>
         </main>

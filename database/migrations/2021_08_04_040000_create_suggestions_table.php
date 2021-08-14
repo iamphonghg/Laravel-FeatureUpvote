@@ -16,6 +16,7 @@ class CreateSuggestionsTable extends Migration
         Schema::create('suggestions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contributor_id')->constrained();
+            $table->foreignId('board_id')->constrained();
             $table->string('title');
             $table->string('slug')->nullable();
             $table->text('description');

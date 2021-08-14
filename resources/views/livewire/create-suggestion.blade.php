@@ -1,24 +1,24 @@
 <form wire:submit.prevent="createSuggestion" action="#" method="POST" class="space-y-4 px-4 py-6">
     <div>
-        <input wire:model.defer="title" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Title" name="title" required>
+        <input wire:model.defer="title" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Title" name="title" >
         @error('title')
             <p class="text-red text-xs mt-1">{{ $message }}</p>
         @enderror
     </div>
     <div>
-        <textarea wire:model.defer="description" name="description" id="description" cols="30" rows="4" class="block w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm m-0" placeholder="Describe your suggestion" required></textarea>
+        <textarea wire:model.defer="description" name="description" id="description" cols="30" rows="4" class="block w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm m-0" placeholder="Describe your suggestion" ></textarea>
         @error('description')
             <p class="text-red text-xs mt-1">{{ $message }}</p>
         @enderror
     </div>
     <div>
-        <input wire:model.defer="name" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 text-sm" placeholder="Your name" name="name" required>
+        <input wire:model.defer="name" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 text-sm" placeholder="Your name" name="name" >
     </div>
     <div>
-        <input wire:model.defer="shopName" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Your shop name" name="shopName" required>
+        <input wire:model.defer="shopName" type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm" placeholder="Your shop name" name="shopName" >
     </div>
     <div>
-        <input wire:model.defer="email" type="email" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm mb-2" placeholder="Your email" name="email" required>
+        <input wire:model.defer="email" type="email" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm mb-2" placeholder="Your email" name="email" >
     </div>
     <div class="flex items-center justify-between space-x-3">
         <button type="button" class="flex items-center justify-center w-1/2 bg-gray-200 font-bold h-11 text-sm rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">

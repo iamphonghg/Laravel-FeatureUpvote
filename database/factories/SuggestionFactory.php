@@ -20,11 +20,12 @@ class SuggestionFactory extends Factory {
      * @return array
      */
     public function definition() {
-        $status = ['Awaiting', 'Considering', 'Planned', 'Not planned', 'Done', 'Deleted'];
+        $status = ['awaiting', 'considering', 'planned', 'not_planned', 'done', 'deleted'];
         $randomInteger = rand(0, 5);
 
         return [
             'contributor_id' => $this->faker->numberBetween(1, 20),
+            'board_id' => 1,
             'title' => ucwords($this->faker->words(4, true)),
             'description' => $this->faker->paragraph(5),
             'status' => $status[$randomInteger],

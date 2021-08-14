@@ -17,7 +17,12 @@ if (!isset($_COOKIE["voted_suggestion_list"])) {
     setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
 }
 
-Route::get('/', [SuggestionController::class, 'index'])->name('suggestion.index');
-Route::get('/suggestions/{suggestion:slug}', [SuggestionController::class, 'show'])->name('suggestion.show');
+Route::get('/', function() {
+    return redirect(route('suggestion.index', 'demoproduct'));
+});
+
+Route::get('/boards/{board:url_name}', [SuggestionController::class, 'index'])->name('suggestion.index');
+
+Route::get('/boards/{board:url_name}/suggestions/{suggestion:slug}', [SuggestionController::class, 'show'])->name('suggestion.show');
 
 require __DIR__.'/auth.php';

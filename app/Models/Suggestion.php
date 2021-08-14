@@ -7,8 +7,6 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use function PHPUnit\Framework\returnSelf;
-
 class Suggestion extends Model {
     use HasFactory, Sluggable;
 
@@ -28,22 +26,24 @@ class Suggestion extends Model {
         ];
     }
 
+    public function board() {
+        return $this->belongsTo(Board::class);
+    }
     public function contributor() {
         return $this->belongsTo(Contributor::class);
     }
-
     public function votes() {
         return $this->belongsToMany(Contributor::class, 'votes');
     }
 
     public function getStatusClasses() {
         $allStatuses = [
-            'Awaiting' => 'bg-gray-200',
-            'Considering' => 'bg-blue text-white',
-            'Planned' => 'bg-purple text-white',
-            'Not planned' => 'bg-yellow text-white',
-            'Done' => 'bg-green text-white',
-            'Deleted' => 'bg-red text-white'
+            'awaiting' => 'bg-gray-200',
+            'considering' => 'bg-blue text-white',
+            'planned' => 'bg-purple text-white',
+            'not_planned' => 'bg-yellow text-white',
+            'done' => 'bg-green text-white',
+            'deleted' => 'bg-red text-white'
         ];
         return $allStatuses[$this->status];
     }
@@ -61,6 +61,9 @@ class Suggestion extends Model {
     public function vote() {
         if (!isset($_COOKIE["voted_suggestion_list"])) {
             setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
+        }
+        if ($this->isVotedByThisBrowser()) {
+            return;
         }
         $vote = Vote::factory()->create([
             'suggestion_id' => $this->id,
@@ -83,13 +86,18 @@ class Suggestion extends Model {
                 break;
             }
         }
-        Vote::find($voteId)->delete();
-        $this->updateVotedSuggestionListCookie('removeVote', $this->id, $voteId);
+        $voteToDelete = Vote::find($voteId);
+        if ($voteToDelete) {
+            $voteToDelete->delete();
+            $this->updateVotedSuggestionListCookie('removeVote', $this->id, $voteId);
+        } else {
+            return;
+        }
     }
 
     public function contributorOfThisBrowser() {
         if (!isset($_COOKIE["cid"])) {
-            return 0;
+            return 1;
         }
         return $_COOKIE["cid"];
     }

@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Exceptions\DuplicateVoteException;
+use App\Exceptions\VoteNotFoundException;
 use Livewire\Component;
 
 class SuggestionIndex extends Component {
     public $suggestion;
     public $votesCount;
+    public $urlName;
     public $hasVoted;
 
     public function mount() {

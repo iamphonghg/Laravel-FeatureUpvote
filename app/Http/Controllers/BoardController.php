@@ -3,21 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
-use App\Models\Suggestion;
 use Illuminate\Http\Request;
 
-class SuggestionController extends Controller {
+class BoardController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Board $board) {
-        if ($board == null) {
-            abort(404);
-        } else {
-            return view('suggestion.index', ['urlName' => $board->url_name]);
-        }
+    public function index()
+    {
+        //
     }
 
     /**
@@ -44,24 +41,21 @@ class SuggestionController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Suggestion  $suggestion
+     * @param  \App\Models\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function show($board, Suggestion $suggestion) {
-        return view('suggestion.show', [
-            'suggestion' => $suggestion,
-            'votesCount' => $suggestion->votes()->count(),
-            'urlName' => $board
-        ]);
+    public function show(Board $board)
+    {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Suggestion  $suggestion
+     * @param  \App\Models\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function edit(Suggestion $suggestion)
+    public function edit(Board $board)
     {
         //
     }
@@ -70,10 +64,10 @@ class SuggestionController extends Controller {
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Suggestion  $suggestion
+     * @param  \App\Models\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Suggestion $suggestion)
+    public function update(Request $request, Board $board)
     {
         //
     }
@@ -81,10 +75,10 @@ class SuggestionController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Suggestion  $suggestion
+     * @param  \App\Models\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Suggestion $suggestion)
+    public function destroy(Board $board)
     {
         //
     }
