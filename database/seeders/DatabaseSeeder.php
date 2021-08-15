@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder {
         User::factory()->create([
             'name' => 'Phong Hoang Gia',
             'contributor_id' => 2,
-            'email' => 'gioxoay.xp#gmail.com',
+            'email' => 'gioxoay.xp@gmail.com',
             'password' => '123123123'
         ]);
         Board::factory()->create([

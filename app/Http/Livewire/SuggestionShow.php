@@ -9,8 +9,17 @@ class SuggestionShow extends Component {
     public $votesCount;
     public $hasVoted;
 
+    protected $listeners = ['statusWasUpdated', 'suggestionWasUpdated'];
+
     public function mount() {
         $this->hasVoted = $this->suggestion->isVotedByThisBrowser();
+    }
+
+    public function statusWasUpdated() {
+        $this->suggestion->refresh();
+    }
+    public function suggestionWasUpdated() {
+        $this->suggestion->refresh();
     }
 
     public function vote() {

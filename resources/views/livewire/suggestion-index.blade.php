@@ -56,22 +56,6 @@
                 </div>
                 <div class="flex items-center space-x-2 mt-4 md:mt-0">
                     <div class="{{ $suggestion->getStatusClasses() }} font-extrabold text-xs uppercase rounded-full text-center px-4 w-32 h-7 py-2 leading-none">{{ $suggestion->status }}</div>
-                    <div x-data="{ isOpen: false }" class="relative">
-                        <button @click="isOpen = !isOpen" class="bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3">
-                            <svg fill="currentColor" width="24" height="6">
-                                <path d="M2.97.061A2.969 2.969 0 000 3.031 2.968 2.968 0 002.97 6a2.97 2.97 0 100-5.94zm9.184 0a2.97 2.97 0 100 5.939 2.97 2.97 0 100-5.939zm8.877 0a2.97 2.97 0 10-.003 5.94A2.97 2.97 0 0021.03.06z" style="color: rgba(163, 163, 163, .5)">
-                            </svg>
-                        </button>
-                        <ul
-                            x-cloak
-                            @click.away="isOpen = false"
-                            x-show.transition.origin.top.left="isOpen"
-                            class="absolute w-36 font-bold bg-white shadow-dialog rounded-xl py-3 md:ml-8 top-8 md:top-6 right-0 md:left-0"
-                        >
-                            <li><a href="#" class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Mark as Spam</a></li>
-                            <li><a href="#" class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Delete Post</a></li>
-                        </ul>
-                    </div>
                 </div>
 
                 <div class="flex items-center md:hidden mt-4 md:mt-0">

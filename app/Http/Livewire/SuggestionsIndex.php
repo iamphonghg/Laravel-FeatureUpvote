@@ -42,10 +42,8 @@ class SuggestionsIndex extends Component {
     public function render() {
         $board = Board::where('url_name', $this->urlName)->first();
 
-        $contributorId = 1;
-        if (isset($_COOKIE['cid'])) {
-            $contributorId = $_COOKIE['cid'];
-        }
+        $contributorId = $_COOKIE['cid'] ?? 0;
+
         return view('livewire.suggestions-index', [
             'suggestions' => $board->suggestions()->where([
                 ['status', '!=', 'awaiting'],

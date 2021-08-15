@@ -51,7 +51,10 @@ class SuggestionController extends Controller {
         return view('suggestion.show', [
             'suggestion' => $suggestion,
             'votesCount' => $suggestion->votes()->count(),
-            'urlName' => $board
+            'urlName' => $board,
+            'backUrl' => url()->previous() !== url()->full()
+                ? url()->previous()
+                : route('suggestion.index', $board)
         ]);
     }
 

@@ -95,6 +95,25 @@ class Suggestion extends Model {
         }
     }
 
+    public function currentContributorCanEditSuggestion() {
+        if (auth()->guest()) {
+            if (!isset($_COOKIE['cid'])) {
+                return false;
+            } else {
+                return $_COOKIE['cid'] == $this->contributor_id
+                    and now()->subHour() <= $this->created_at;
+            }
+        }
+        return true;
+    }
+
+    public function createdByCurrentAdmin() {
+        if (auth()->check() and auth()->user()->contributor_id == $this->contributor_id) {
+            return true;
+        }
+        return false;
+    }
+
     public function contributorOfThisBrowser() {
         if (!isset($_COOKIE["cid"])) {
             return 1;

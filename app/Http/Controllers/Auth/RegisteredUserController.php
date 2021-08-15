@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contributor;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -39,11 +40,20 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $contributor = Contributor::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'shop_name' => '@dmin',
+        ]);
+
         $user = User::create([
+            'contributor_id' => $contributor->id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+
 
         event(new Registered($user));
 
