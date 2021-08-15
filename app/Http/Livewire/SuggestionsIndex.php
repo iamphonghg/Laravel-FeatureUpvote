@@ -12,11 +12,12 @@ class SuggestionsIndex extends Component {
     public $urlName;
     public $status = 'all';
     public $filter;
+    public $search;
 
     protected $queryString = [
         'status',
-        'filter'
-
+        'filter',
+        'search'
     ];
 
     protected $listeners = ['queryStringUpdatedStatus'];
@@ -27,6 +28,9 @@ class SuggestionsIndex extends Component {
     }
 
     public function updatingFilter() {
+        $this->resetPage();
+    }
+    public function updatingSearch() {
         $this->resetPage();
     }
 
@@ -56,6 +60,9 @@ class SuggestionsIndex extends Component {
             })
             ->when($this->filter and $this->filter === 'my_suggestions', function ($query) use ($contributorId) {
                 return $query->where('contributor_id', $contributorId);
+            })
+            ->when(strlen($this->search) >= 3, function ($query) use ($contributorId) {
+                return $query->where('title', 'like', '%'.$this->search.'%');
             })
             ->withCount('votes')
             ->orderBy('id', 'desc')
