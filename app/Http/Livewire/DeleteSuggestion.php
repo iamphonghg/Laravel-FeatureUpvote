@@ -13,7 +13,7 @@ class DeleteSuggestion extends Component
     public $urlName;
 
     public function deleteSuggestion() {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             abort(Response::HTTP_FORBIDDEN);
         }
 

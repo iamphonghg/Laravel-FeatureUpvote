@@ -35,6 +35,9 @@ class Suggestion extends Model {
     public function votes() {
         return $this->belongsToMany(Contributor::class, 'votes');
     }
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
 
     public function getStatusClasses() {
         $allStatuses = [
@@ -93,6 +96,14 @@ class Suggestion extends Model {
         } else {
             return;
         }
+    }
+
+    public function countComment()
+    {
+        return $this->comments()->where([
+            ['status', '!=', 'awaiting'],
+            ['status', '!=', 'deleted']
+        ])->count();
     }
 
     public function currentContributorCanEditSuggestion() {

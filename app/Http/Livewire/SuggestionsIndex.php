@@ -63,6 +63,7 @@ class SuggestionsIndex extends Component {
                 return $query->where('title', 'like', '%'.$this->search.'%');
             })
             ->withCount('votes')
+            ->withCount('comments')
             ->orderBy('id', 'desc')
             ->simplePaginate(3)
         ]);

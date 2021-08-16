@@ -22,17 +22,34 @@ class CreateSuggestion extends Component {
         'shopName' => 'required|min-4',
     ];
 
+    public function mount()
+    {
+        if (auth()->check()) {
+            $this->name = auth()->user()->name;
+            $this->email = auth()->user()->email;
+        } elseif (isset($_COOKIE['cid'])) {
+            $contributor = Contributor::find($_COOKIE['cid']);
+            $this->name = $contributor->name;
+            $this->shopName = $contributor->shop_name;
+            $this->email = $contributor->email;
+
+        }
+    }
+
     public function createSuggestion() {
         // $this->validate();  ---error
         $boardId = Board::where('url_name', $this->urlName)->first()->id;
 
         $contributor = new Contributor();
-        if (isset($_COOKIE['cid'])) {
+        if (auth()->check()) {
+            $contributor = Contributor::find(auth()->user()->contributor_id);
+        } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
-            $contributor->name = $this->name;
-            $contributor->shop_name = $this->shopName;
-            $contributor->email = $this->email;
-            $contributor->save();
+            $contributor->update([
+                'name' => $this->name,
+                'shop_name' => $this->shopName,
+                'email' => $this->email
+            ]);
         } else {
             $contributor = Contributor::create([
                 'name' => $this->name,

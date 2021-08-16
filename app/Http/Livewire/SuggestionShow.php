@@ -9,7 +9,7 @@ class SuggestionShow extends Component {
     public $votesCount;
     public $hasVoted;
 
-    protected $listeners = ['statusWasUpdated', 'suggestionWasUpdated'];
+    protected $listeners = ['statusWasUpdated', 'suggestionWasUpdated', 'commentWasAdded', 'commentWasDeleted'];
 
     public function mount() {
         $this->hasVoted = $this->suggestion->isVotedByThisBrowser();
@@ -19,6 +19,12 @@ class SuggestionShow extends Component {
         $this->suggestion->refresh();
     }
     public function suggestionWasUpdated() {
+        $this->suggestion->refresh();
+    }
+    public function commentWasAdded() {
+        $this->suggestion->refresh();
+    }
+    public function commentWasDeleted() {
         $this->suggestion->refresh();
     }
 

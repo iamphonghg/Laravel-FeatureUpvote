@@ -19,54 +19,56 @@
                         <div class="hidden md:block">&bull;</div>
                         <div>{{ $suggestion->created_at->diffForHumans() }}</div>
                         <div>&bull;</div>
-                        <div class="text-gray-900">3 Comments</div>
+                        <div class="text-gray-900">{{ $suggestion->countComment() }} Comments</div>
                     </div>
                     <div class="flex items-center space-x-2 mt-4 md:mt-0">
-                        <div class="{{ $suggestion->getStatusClasses() }} font-extrabold text-xs uppercase rounded-full text-center px-4 w-32 h-7 py-2 leading-none">{{ $suggestion->status }}</div>
-                        <div x-data="{ isOpen: false }" class="relative">
-                            <button @click="isOpen = !isOpen" class="bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3">
-                                <svg fill="currentColor" width="24" height="6">
-                                    <path d="M2.97.061A2.969 2.969 0 000 3.031 2.968 2.968 0 002.97 6a2.97 2.97 0 100-5.94zm9.184 0a2.97 2.97 0 100 5.939 2.97 2.97 0 100-5.939zm8.877 0a2.97 2.97 0 10-.003 5.94A2.97 2.97 0 0021.03.06z" style="color: rgba(163, 163, 163, .5)">
-                                </svg>
-                            </button>
-                            <ul
-                                x-cloak
-                                @click.away="isOpen = false"
-                                x-show.transition.origin.top.left="isOpen"
-                                class="absolute w-36 font-bold bg-white shadow-dialog rounded-xl py-3 md:ml-8 top-8 md:top-6 right-0 md:left-0 z-10"
-                            >
-                                @if ($suggestion->currentContributorCanEditSuggestion())
-                                    <li>
-                                        <a
-                                            href="#"
-                                            @click="
-                                                isOpen = false
-                                                $dispatch('custom-show-edit-modal')
-                                            "
-                                            class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3"
-                                        >
-                                            Edit
-                                        </a>
-                                    </li>
-                                @endif
-                                @if (auth()->check())
-                                    <li>
-                                        <a
-                                            href="#"
-                                            @click="
-                                                isOpen = false
-                                                $dispatch('custom-show-delete-modal')
-                                            "
-                                            class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3"
-                                        >
-                                            Delete this
-                                        </a>
-                                    </li>
-                                @endif
-                                <li><a href="#" class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Mark as Spam</a></li>
-                            </ul>
+                        <div class="{{ $suggestion->getStatusClasses()  }} font-extrabold text-xs uppercase rounded-full text-center px-4 w-32 h-7 py-2 leading-none">{{ str_replace('_', ' ', $suggestion->status) }}</div>
+                            @if (auth()->check() or $suggestion->currentContributorCanEditSuggestion())
+                                <div x-data="{ isOpen: false }" class="relative">
+                                    <button @click="isOpen = !isOpen" class="bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3">
+                                        <svg fill="currentColor" width="24" height="6">
+                                            <path d="M2.97.061A2.969 2.969 0 000 3.031 2.968 2.968 0 002.97 6a2.97 2.97 0 100-5.94zm9.184 0a2.97 2.97 0 100 5.939 2.97 2.97 0 100-5.939zm8.877 0a2.97 2.97 0 10-.003 5.94A2.97 2.97 0 0021.03.06z" style="color: rgba(163, 163, 163, .5)">
+                                        </svg>
+                                    </button>
+                                    <ul
+                                        x-cloak
+                                        @click.away="isOpen = false"
+                                        x-show.transition.origin.top.left="isOpen"
+                                        class="absolute w-36 font-bold bg-white shadow-dialog rounded-xl py-3 md:ml-8 top-8 md:top-6 right-0 md:left-0 z-10"
+                                    >
+                                        <li>
+                                            <a
+                                                href="#"
+                                                @click.prevent="
+                                                    isOpen = false
+                                                    $dispatch('custom-show-edit-modal')
+                                                "
+                                                class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3"
+                                            >
+                                                Edit
+                                            </a>
+                                        </li>
+
+                                        @if (auth()->check())
+                                            <li>
+                                                <a
+                                                    href="#"
+                                                    @click.prevent="
+                                                        isOpen = false
+                                                        $dispatch('custom-show-delete-modal')
+                                                    "
+                                                    class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3"
+                                                >
+                                                    Delete this
+                                                </a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
-                    </div>
+
+
                     <div class="flex items-center md:hidden mt-4 md:mt-0">
                             <div class="bg-gray-100 text-center rounded-3xl px-4 py-2 pr-10">
                                 <div class="@if ($hasVoted) text-blue @endif text-xs font-bold leading-none">{{ $votesCount }}</div>
@@ -95,30 +97,9 @@
 
     <div class="buttons-container flex items-center justify-between mt-6">
         <div class="flex items-center space-x-4 ml-6">
-            <div x-cloak x-data="{ isOpen: false }"class="relative">
-                <button @click="isOpen = !isOpen" type="button" class="flex items-center justify-center bg-blue font-bold w-32 h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">Reply</button>
-
-                <div
-                    @click.away="isOpen = false"
-                    x-show.transition.origin.top.left="isOpen"
-                    class="absolute z-10 w-104 text-left font-bold text-base bg-white shadow-dialog rounded-xl mt-2"
-                >
-                    <form action="#" class="space-y-4 px-4 py-6">
-                        <div>
-                            <textarea name="commentContent" id="commentContent" cols="30" rows="4" class="w-full bg-gray-100 rounded-xl border-none font-semibold placeholder-gray-900 px-4 py-2" placeholder="Your comment"></textarea>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <button type="button" class="flex items-center justify-center bg-blue font-bold w-1/2 h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">Post Comment</button>
-                            <button type="button" class="flex items-center justify-center w-32 bg-gray-200 font-bold h-11 text-sm rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">
-                                <svg class="text-gray-600 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                </svg>
-                                <span class="ml-1">Attach</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <livewire:add-comment
+                :suggestion="$suggestion"
+            />
             @auth
                 <livewire:set-status
                     :suggestion="$suggestion"

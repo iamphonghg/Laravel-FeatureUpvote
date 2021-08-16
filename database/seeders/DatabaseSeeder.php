@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Board;
+use App\Models\Comment;
 use App\Models\Contributor;
 use App\Models\Suggestion;
 use App\Models\User;
@@ -52,5 +53,12 @@ class DatabaseSeeder extends Seeder {
                 }
             }
         }
+
+        // generate comments for suggestions
+
+        foreach (Suggestion::all() as $suggestion) {
+            Comment::factory(5)->existing()->create(['suggestion_id' => $suggestion->id]);
+        }
+
     }
 }

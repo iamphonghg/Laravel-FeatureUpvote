@@ -53,9 +53,9 @@
                     </label>
                 </div>
             </div>
-            <div>
+            {{-- <div>
                 <textarea name="updateComment" id="updateComment" cols="30" rows="3" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold text-sm px-4 py-2" placeholder="Add an update comment (Optional)"></textarea>
-            </div>
+            </div> --}}
             <div class="flex items-center justify-between space-x-3">
                 <button type="submit" class="flex items-center justify-center w-1/2 bg-blue font-bold h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">Update</button>
                 <button type="button" class="flex items-center justify-center w-1/2 bg-gray-200 font-bold h-11 text-sm rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">
@@ -64,13 +64,6 @@
                     </svg>
                     <span class="ml-1">Attach</span>
                 </button>
-            </div>
-
-            <div>
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="notifyVoters" class=" rounded bg-gray-200 border-none" checked="">
-                    <span class="ml-2">Notify all voters</span>
-                </label>
             </div>
         </form>
     </div>

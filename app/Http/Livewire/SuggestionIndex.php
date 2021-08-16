@@ -9,6 +9,7 @@ use Livewire\Component;
 class SuggestionIndex extends Component {
     public $suggestion;
     public $votesCount;
+    public $commentsCount;
     public $urlName;
     public $hasVoted;
 
