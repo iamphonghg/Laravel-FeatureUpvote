@@ -9,6 +9,7 @@ use App\Models\Suggestion;
 use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder {
     /**
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder {
             'name' => 'Phong Hoang Gia',
             'contributor_id' => 2,
             'email' => 'gioxoay.xp@gmail.com',
-            'password' => '123123123'
+            'password' => Hash::make('123123123')
         ]);
         Board::factory()->create([
             'user_id' => 1,

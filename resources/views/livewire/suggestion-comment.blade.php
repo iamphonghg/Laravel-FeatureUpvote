@@ -20,7 +20,7 @@
 
                     <div>{{ $comment->created_at->diffForHumans() }}</div>
                 </div>
-                @if (auth()->check() or $comment->currentContributorCanEditComment())
+                @if ($comment->currentUserCanEditThisComment())
                     <div
                         x-data="{ isOpen: false }"
                         class="relative"
@@ -52,7 +52,7 @@
                                     Edit
                                 </a>
                             </li>
-                            @if (auth()->check())
+                            @if ($comment->suggestion->currentAdminOwnsThisBoard())
                                 <li>
                                     <a
                                     href="#"

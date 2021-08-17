@@ -22,8 +22,8 @@ class CommentFactory extends Factory
      * @return array
      */
     public function definition() {
-        $status = ['awaiting', 'approved', 'deleted'];
-        $randomInteger = rand(0, 2);
+        $status = ['approved', 'deleted'];
+        $randomInteger = rand(0, 1);
 
         return [
             'contributor_id' => Contributor::factory(),
@@ -37,7 +37,7 @@ class CommentFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'contributor_id' => $this->faker->numberBetween(2, 20),
-                'status' => 'awaiting',
+                'status' => 'approved',
             ];
         });
     }

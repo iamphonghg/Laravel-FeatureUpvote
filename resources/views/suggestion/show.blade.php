@@ -20,12 +20,12 @@
         :suggestion="$suggestion"
     />
 
-    @if ($suggestion->currentContributorCanEditSuggestion())
+    @if ($suggestion->currentUserCanEditThisSuggestion())
         <livewire:edit-suggestion
             :suggestion="$suggestion"
         />
     @endif
-    @if (auth()->check())
+    @if ($suggestion->currentAdminOwnsThisBoard())
         <livewire:delete-suggestion
             :suggestion="$suggestion"
             :urlName="$urlName"

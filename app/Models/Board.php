@@ -13,4 +13,9 @@ class Board extends Model {
     public function suggestions() {
         return $this->hasMany(Suggestion::class);
     }
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
 }

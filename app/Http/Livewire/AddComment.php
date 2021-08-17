@@ -49,7 +49,7 @@ class AddComment extends Component {
             'suggestion_id' => $this->suggestion->id,
             'contributor_id' => $contributorId,
             'body' => $this->body,
-            'status' => 'awaiting'
+            'status' => 'approved'
         ]);
 
         $this->reset('body');

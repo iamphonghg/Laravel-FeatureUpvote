@@ -23,7 +23,6 @@
                 :key="$suggestion->id"
                 :suggestion="$suggestion"
                 :votesCount="$suggestion->votes_count"
-                :commentsCount="$suggestion->comments_count"
                 :urlName="$urlName"
             />
         @empty

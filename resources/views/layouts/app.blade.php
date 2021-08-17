@@ -17,11 +17,12 @@
     </head>
     <body class="font-sans font-semibold bg-gray-background text-gray-900 text-sm">
         <header class="flex flex-col md:flex-row items-center justify-between px-8 py-4">
-            <div class="flex items-center">
-                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" />
+            <div class="flex items-center text-white">
+                <svg class="h-10 w-10 text-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" />
                 </svg>
-                <a href="#" class="text-3xl px-1">Feature Vote</a>
+                <a href="#" class="text-xl font-bold text-gray-900 px-1">Feature Vote</a>
             </div>
             <div class="flex items-center mt-2 md:mt-0">
                 @if (Route::has('login'))
@@ -42,15 +43,8 @@
                         @else
                             <a
                                 href="{{ route('login') }}"
-                                class="w-28 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Log in
+                                class="w-44 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Log in as admin
                             </a>
-
-                            @if (Route::has('register'))
-                                <a
-                                    href="{{ route('register') }}"
-                                    class="w-28 ml-4 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Register
-                                </a>
-                            @endif
                         @endauth
                     </div>
                 @endif

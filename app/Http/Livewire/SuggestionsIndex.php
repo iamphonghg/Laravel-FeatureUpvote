@@ -39,17 +39,34 @@ class SuggestionsIndex extends Component {
         $this->status = $newStatus;
     }
 
+    public function currentAdminOwnsThisBoard() {
+        $board = Board::where('url_name', $this->urlName)->first();
+        if (auth()->check()) {
+            if ($board->user_id == auth()->id()) {
+                return true;
+            }
+        }
+    }
+
     public function render() {
         $board = Board::where('url_name', $this->urlName)->first();
 
-        $contributorId = $_COOKIE['cid'] ?? 0;
-
+        $contributorId = 0;
+        if (auth()->check()) {
+            $contributorId = auth()->user()->contributor_id;
+        } elseif (isset($_COOKIE['cid'])) {
+            $contributorId = $_COOKIE['cid'];
+        }
+        // dd($contributorId);
         return view('livewire.suggestions-index', [
-            'suggestions' => $board->suggestions()->where([
-                ['status', '!=', 'awaiting'],
-                ['status', '!=', 'deleted']
-            ])
+            'suggestions' => $board->suggestions()
             ->with('contributor')
+            ->when(! $this->currentAdminOwnsThisBoard(), function ($query) {
+                return $query->where([
+                    ['status', '!=', 'awaiting'],
+                    ['status', '!=', 'deleted']
+                ]);
+            })
             ->when($this->status and $this->status !== 'all', function ($query) {
                 return $query->where('status', $this->status);
             })
@@ -63,9 +80,8 @@ class SuggestionsIndex extends Component {
                 return $query->where('title', 'like', '%'.$this->search.'%');
             })
             ->withCount('votes')
-            ->withCount('comments')
             ->orderBy('id', 'desc')
-            ->simplePaginate(3)
+            ->simplePaginate(7)
         ]);
     }
 }

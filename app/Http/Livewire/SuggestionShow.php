@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Http\Response;
 use Livewire\Component;
 
 class SuggestionShow extends Component {
@@ -41,6 +42,9 @@ class SuggestionShow extends Component {
     }
 
     public function render() {
+        if (! $this->suggestion->currentAdminOwnsThisBoard() and ($this->suggestion->status == 'deleted' or $this->suggestion->status == 'awaiting')) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
         return view('livewire.suggestion-show');
     }
 }

@@ -98,28 +98,51 @@ class Suggestion extends Model {
         }
     }
 
-    public function countComment()
-    {
+    public function countCommentForNormalUser() {
         return $this->comments()->where([
-            ['status', '!=', 'awaiting'],
             ['status', '!=', 'deleted']
         ])->count();
     }
+    public function countCommentForAdmin() {
+        return $this->comments()->count();
+    }
 
-    public function currentContributorCanEditSuggestion() {
+    public function currentUserCanEditThisSuggestion() {
+        if ($this->currentContributorCanEditThisSuggestion()) {
+            return true;
+        } elseif ($this->currentAdminOwnsThisBoard()) {
+            return true;
+        } elseif ($this->currentAdminCanEditThisSuggestion()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function currentContributorCanEditThisSuggestion() {
         if (auth()->guest()) {
             if (!isset($_COOKIE['cid'])) {
                 return false;
             } else {
-                return $_COOKIE['cid'] == $this->contributor_id
-                    and now()->subHour() <= $this->created_at;
+                return $_COOKIE['cid'] == $this->contributor_id and now()->subHour() <= $this->created_at;
             }
         }
-        return true;
     }
 
-    public function createdByCurrentAdmin() {
-        if (auth()->check() and auth()->user()->contributor_id == $this->contributor_id) {
+    public function currentAdminCanEditThisSuggestion() {
+        return auth()->check() and auth()->user()->contributor_id == $this->contributor_id
+            and now()->subHour() <= $this->created_at;
+    }
+
+    public function currentAdminOwnsThisBoard() {
+        if (auth()->check()) {
+            if ($this->board->user_id == auth()->id()) {
+                return true;
+            }
+        }
+    }
+
+    public function createdByAdminOfThisBoard() {
+        if ($this->currentAdminOwnsThisBoard() and auth()->user()->contributor_id == $this->contributor_id) {
             return true;
         }
         return false;

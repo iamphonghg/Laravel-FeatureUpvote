@@ -17,7 +17,24 @@ class Comment extends Model {
         return $this->belongsTo(Suggestion::class);
     }
 
-    public function currentContributorCanEditComment() {
+    public function currentUserCanEditThisComment() {
+        if ($this->currentContributorCanEditThisComment()) {
+            return true;
+        } elseif ($this->suggestion->currentAdminOwnsThisBoard()) {
+            return true;
+        } elseif ($this->currentAdminCreatedThisCommentButNotOwnsThisBoard()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function currentAdminCreatedThisCommentButNotOwnsThisBoard() {
+        if ($this->contributor_id == auth()->user()->contributor_id) {
+            return true;
+        }
+    }
+
+    public function currentContributorCanEditThisComment() {
         if (auth()->guest()) {
             if (!isset($_COOKIE['cid'])) {
                 return false;
@@ -25,6 +42,6 @@ class Comment extends Model {
                 return $_COOKIE['cid'] == $this->contributor_id;
             }
         }
-        return true;
     }
+
 }

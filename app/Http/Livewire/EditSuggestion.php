@@ -24,7 +24,7 @@ class EditSuggestion extends Component {
     }
 
     public function updateSuggestion() {
-        if (!$this->suggestion->currentContributorCanEditSuggestion()) {
+        if (! $this->suggestion->currentUserCanEditThisSuggestion()) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
@@ -32,13 +32,13 @@ class EditSuggestion extends Component {
             'title' => $this->title,
             'description' => $this->description
         ]);
-
-        $this->suggestion->contributor->update([
-            'name' => $this->name,
-            'shop_name' => $this->shopName,
-            'email' => $this->email
-        ]);
-
+        if (! $this->suggestion->createdByAdminOfThisBoard()) {
+            $this->suggestion->contributor->update([
+                'name' => $this->name,
+                'shop_name' => $this->shopName,
+                'email' => $this->email
+            ]);
+        }
         $this->emit('suggestionWasUpdated');
     }
 

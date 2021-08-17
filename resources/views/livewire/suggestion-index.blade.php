@@ -52,7 +52,14 @@
                 <div class="flex items-center text-xs text-gray-400 space-x-2">
                     <div>{{ $suggestion->created_at->diffForHumans() }}</div>
                     <div>&bull;</div>
-                    <div class="text-gray-900">{{ $commentsCount }} Comments</div>
+                    <div class="text-gray-900">
+                        @if ($suggestion->currentAdminOwnsThisBoard())
+                        {{ $suggestion->countCommentForAdmin() }}
+                        @else
+                        {{ $suggestion->countCommentForNormalUser() }}
+                        @endif
+                        comments
+                    </div>
                 </div>
                 <div class="flex items-center space-x-2 mt-4 md:mt-0">
                     <div class="{{ $suggestion->getStatusClasses() }} font-extrabold text-xs uppercase rounded-full text-center px-4 w-32 h-7 py-2 leading-none">{{ str_replace('_', ' ', $suggestion->status) }}</div>

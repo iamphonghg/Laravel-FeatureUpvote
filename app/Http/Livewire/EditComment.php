@@ -26,10 +26,10 @@ class EditComment extends Component {
     }
 
     public function updateComment() {
-        if (! $this->comment->currentContributorCanEditComment()) {
+        if (! $this->comment->currentUserCanEditThisComment()) {
             abort(Response::HTTP_FORBIDDEN);
         }
-        
+
         $this->comment->body = $this->body;
         $this->comment->save();
 

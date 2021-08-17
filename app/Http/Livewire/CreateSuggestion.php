@@ -26,6 +26,7 @@ class CreateSuggestion extends Component {
     {
         if (auth()->check()) {
             $this->name = auth()->user()->name;
+            $this->shopName = 'Admin';
             $this->email = auth()->user()->email;
         } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);

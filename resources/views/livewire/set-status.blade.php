@@ -18,7 +18,7 @@
         x-cloak
         @click.away="isOpen = false"
         x-show.transition.origin.top.left="isOpen"
-        class="absolute z-20 w-76 text-left font-bold text-base bg-white shadow-dialog rounded-xl mt-2"
+        class="absolute z-20 w-52 text-left font-bold text-base bg-white shadow-dialog rounded-xl mt-2"
     >
         <form wire:submit.prevent="setStatus" action="#" class="space-y-4 px-4 py-6">
             <div class="space-y-2">
@@ -53,17 +53,12 @@
                     </label>
                 </div>
             </div>
+
             {{-- <div>
                 <textarea name="updateComment" id="updateComment" cols="30" rows="3" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold text-sm px-4 py-2" placeholder="Add an update comment (Optional)"></textarea>
             </div> --}}
-            <div class="flex items-center justify-between space-x-3">
-                <button type="submit" class="flex items-center justify-center w-1/2 bg-blue font-bold h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">Update</button>
-                <button type="button" class="flex items-center justify-center w-1/2 bg-gray-200 font-bold h-11 text-sm rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">
-                    <svg class="text-gray-600 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                    </svg>
-                    <span class="ml-1">Attach</span>
-                </button>
+            <div class="flex items-center justify-center space-x-3">
+                <button type="submit" class="leading-none text-center w-1/2 bg-blue font-bold h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in py-3">Update</button>
             </div>
         </form>
     </div>
