@@ -19,9 +19,11 @@ class AddComment extends Component {
             $this->email = auth()->user()->email;
         } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
-            $this->name = $contributor->name;
-            $this->shopName = $contributor->shop_name;
-            $this->email = $contributor->email;
+            if (isset($contributor)) {
+                $this->name = $contributor->name;
+                $this->shopName = $contributor->shop_name;
+                $this->email = $contributor->email;
+            }
         }
     }
 
@@ -31,18 +33,28 @@ class AddComment extends Component {
             $contributorId = auth()->user()->contributor_id;
         } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
-            $contributor->update([
-                'name' => $this->name,
-                'email' => $this->email,
-                'shop_name' => $this->shopName
-            ]);
-            $contributorId = $_COOKIE['cid'];
+            if (isset($contributor)) {
+                $contributor->update([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'shop_name' => $this->shopName
+                ]);
+                $contributorId = $_COOKIE['cid'];
+            } else {
+                $contributorId = Contributor::create([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'shop_name' => $this->shopName
+                ])->id;
+                setcookie("cid", $contributorId, time() + 86400 * 365, "/");
+            }
         } else {
             $contributorId = Contributor::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'shop_name' => $this->shopName
             ])->id;
+            setcookie("cid", $contributorId, time() + 86400 * 365, "/");
         }
 
         Comment::create([

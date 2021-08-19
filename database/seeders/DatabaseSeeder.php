@@ -25,14 +25,14 @@ class DatabaseSeeder extends Seeder {
             'shop_name' => '@nonymous'
         ]);
         Contributor::factory()->create([
-            'name' => 'Phong Hoang Gia',
-            'email' => 'gioxoay.xp@gmail.com',
-            'shop_name' => '@dmin'
+            'name' => 'Admin',
+            'email' => 'admin@secomus.com',
+            'shop_name' => 'Admin'
         ]);
         User::factory()->create([
-            'name' => 'Phong Hoang Gia',
+            'name' => 'Admin',
             'contributor_id' => 2,
-            'email' => 'gioxoay.xp@gmail.com',
+            'email' => 'admin@secomus.com',
             'password' => Hash::make('123123123')
         ]);
         Board::factory()->create([

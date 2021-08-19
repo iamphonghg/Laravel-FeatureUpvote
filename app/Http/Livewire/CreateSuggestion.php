@@ -30,10 +30,11 @@ class CreateSuggestion extends Component {
             $this->email = auth()->user()->email;
         } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
-            $this->name = $contributor->name;
-            $this->shopName = $contributor->shop_name;
-            $this->email = $contributor->email;
-
+            if (isset($contributor)) {
+                $this->name = $contributor->name;
+                $this->shopName = $contributor->shop_name;
+                $this->email = $contributor->email;
+            }
         }
     }
 
@@ -46,11 +47,20 @@ class CreateSuggestion extends Component {
             $contributor = Contributor::find(auth()->user()->contributor_id);
         } elseif (isset($_COOKIE['cid'])) {
             $contributor = Contributor::find($_COOKIE['cid']);
-            $contributor->update([
-                'name' => $this->name,
-                'shop_name' => $this->shopName,
-                'email' => $this->email
-            ]);
+            if (isset($contributor)) {
+               $contributor->update([
+                    'name' => $this->name,
+                    'shop_name' => $this->shopName,
+                    'email' => $this->email
+                ]);
+            } else {
+                $contributor = Contributor::create([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'shop_name' => $this->shopName,
+                ]);
+                setcookie("cid", $contributor->id, time() + 86400 * 365, "/");
+            }
         } else {
             $contributor = Contributor::create([
                 'name' => $this->name,

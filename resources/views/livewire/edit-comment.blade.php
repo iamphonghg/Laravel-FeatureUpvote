@@ -60,9 +60,7 @@
                         <button type="submit" class="text-center w-36 bg-blue font-bold h-11 text-sm text-white rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3 mr-4">Save</button>
                     </div>
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>

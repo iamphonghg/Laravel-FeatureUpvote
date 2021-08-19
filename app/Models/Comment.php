@@ -29,7 +29,7 @@ class Comment extends Model {
     }
 
     public function currentAdminCreatedThisCommentButNotOwnsThisBoard() {
-        if ($this->contributor_id == auth()->user()->contributor_id) {
+        if (auth()->check() and $this->contributor_id == auth()->user()->contributor_id) {
             return true;
         }
     }

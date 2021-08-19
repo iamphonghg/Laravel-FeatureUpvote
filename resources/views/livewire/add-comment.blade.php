@@ -2,7 +2,7 @@
     x-cloak
     x-data="{ isOpen: false }"
     x-init="
-        window.livewire.on('commentWasAdded', () => {
+        Livewire.on('commentWasAdded', () => {
             isOpen = false
         })
     "

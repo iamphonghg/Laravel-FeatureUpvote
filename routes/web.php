@@ -26,5 +26,8 @@ Route::get('/boards/{board:url_name}', [SuggestionController::class, 'index'])->
 
 Route::get('/boards/{board:url_name}/suggestions/{suggestion:slug}', [SuggestionController::class, 'show'])->name('suggestion.show');
 
-Route::get('/dashboard', [BoardController::class, 'index'])->name('board.index');
+Route::get('/dashboard', [BoardController::class, 'index'])->name('board.index')->middleware('auth');
+
+Route::get('/dashboard/{board:url_name}', [BoardController::class, 'moderate'])->name('board.moderate')->middleware('auth');
+
 require __DIR__.'/auth.php';

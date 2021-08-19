@@ -35,22 +35,27 @@
                                     href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                 this.closest('form').submit();"
-                                    class="w-28 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center"
+                                    class="w-28 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-1 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center"
                                 >
                                     {{ __('Log Out') }}
                                 </a>
                             </form>
+                            <a href="{{ route('board.index') }}" class="mx-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="text-blue h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                                </svg>
+                            </a>
                         @else
                             <a
                                 href="{{ route('login') }}"
-                                class="w-44 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-2 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Log in as admin
+                                class="w-44 text-sm text-blue hover:text-white hover:bg-blue rounded-full border-2 border-blue py-1 px-4 uppercase font-bold leading-none transition ease-in duration-150 text-center">Log in as admin
                             </a>
                         @endauth
                     </div>
                 @endif
-                <a href="">
-                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp" alt="avatar" class="w-10 h-10 rounded-full border-2 border-gray-300">
-                </a>
+
+
             </div>
         </header>
 

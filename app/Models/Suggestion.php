@@ -41,12 +41,23 @@ class Suggestion extends Model {
 
     public function getStatusClasses() {
         $allStatuses = [
-            'awaiting' => 'bg-gray-200',
-            'considering' => 'bg-blue text-white',
-            'planned' => 'bg-purple text-white',
-            'not_planned' => 'bg-yellow text-white',
-            'done' => 'bg-green text-white',
-            'deleted' => 'bg-red text-white'
+            'awaiting' => 'bg-gray-600',
+            'considering' => 'bg-blue',
+            'planned' => 'bg-purple',
+            'not_planned' => 'bg-yellow',
+            'done' => 'bg-green',
+            'deleted' => 'bg-red'
+        ];
+        return $allStatuses[$this->status];
+    }
+    public function getTableBorderClasses() {
+        $allStatuses = [
+            'awaiting' => 'border-gray-600',
+            'considering' => 'border-blue',
+            'planned' => 'border-purple',
+            'not_planned' => 'border-yellow',
+            'done' => 'border-green',
+            'deleted' => 'border-red'
         ];
         return $allStatuses[$this->status];
     }

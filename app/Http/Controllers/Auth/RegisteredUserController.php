@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
         $contributor = Contributor::create([
             'name' => $request->name,
             'email' => $request->email,
-            'shop_name' => '@dmin',
+            'shop_name' => 'Admin',
         ]);
 
         $user = User::create([

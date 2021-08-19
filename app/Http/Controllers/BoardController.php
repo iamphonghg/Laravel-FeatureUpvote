@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class BoardController extends Controller
 {
@@ -13,7 +14,20 @@ class BoardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('dashboard');
+        $boards = auth()->user()->boards()
+            ->withCount('suggestions')
+            ->get();
+
+        return view('board.index', ['boards' => $boards]);
+    }
+
+    public function moderate(Board $board) {
+        if ($board->user_id != auth()->id()) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        return view('board.moderate', [
+            'board' => $board,
+        ]);
     }
 
     /**
