@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\CookieController;
 use App\Models\Contributor;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Crypt;
 
 class Suggestion extends Model {
     use HasFactory, Sluggable;
@@ -17,8 +20,7 @@ class Suggestion extends Model {
      *
      * @return array
      */
-    public function sluggable(): array
-    {
+    public function sluggable(): array {
         return [
             'slug' => [
                 'source' => 'title'
@@ -39,6 +41,9 @@ class Suggestion extends Model {
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * Get the background color class for this suggestion's status label.
+     */
     public function getStatusClasses() {
         $allStatuses = [
             'awaiting' => 'bg-gray-600',
@@ -50,6 +55,10 @@ class Suggestion extends Model {
         ];
         return $allStatuses[$this->status];
     }
+
+    /**
+     * Get the border color class for each row of suggestion list (in suggestion manager).
+     */
     public function getTableBorderClasses() {
         $allStatuses = [
             'awaiting' => 'border-gray-600',
@@ -62,118 +71,117 @@ class Suggestion extends Model {
         return $allStatuses[$this->status];
     }
 
-    public function isVotedByThisBrowser() {
-        if (isset($_COOKIE["voted_suggestion_list"])) {
-            $suggestionId = $this->id;
-            if (strpos($_COOKIE["voted_suggestion_list"], "sgt$suggestionId") !== false) {
-                return true;
+    /**
+     * Check if this suggestion has been voted by the current user.
+     */
+    public function isVotedByCurrentUser() {
+        if (auth()->check()) {
+            return $this->votes()->where('contributor_id', auth()->user()->contributor_id)
+                ->exists();
+        } else{
+            if (! CookieController::cookieIsNotSetOrChangedOrDeleted()) {
+                $contributorId = Crypt::decrypt($_COOKIE["c_id"]);
+                return $this->votes()->where('contributor_id', $contributorId)
+                    ->exists();
             }
         }
         return false;
     }
 
+    /**
+     * Create a vote if the current suggestion has not been voted by the current user.
+     */
     public function vote() {
-        if (!isset($_COOKIE["voted_suggestion_list"])) {
-            setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
-        }
-        if ($this->isVotedByThisBrowser()) {
+        if ($this->isVotedByCurrentUser()) {
             return;
         }
-        $vote = Vote::factory()->create([
-            'suggestion_id' => $this->id,
-            'contributor_id' => $this->contributorOfThisBrowser(),
-            'ip' => request()->ip(),
-            'user_agent' => request()->userAgent()
-        ]);
-        $this->updateVotedSuggestionListCookie('vote', $this->id, $vote->id);
+        try {
+            Vote::factory()->create([
+                'suggestion_id' => $this->id,
+                'contributor_id' => Contributor::currentContributorId(),
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent()
+            ]);
+        } catch (QueryException $e) {
+            // do nothing
+        }
     }
 
+    /**
+     * Remove vote if the current suggestion is voted by the current user.
+     */
     public function removeVote() {
-        if (!isset($_COOKIE["voted_suggestion_list"])) {
-            setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
+        if (! $this->isVotedByCurrentUser()) {
+            return;
         }
-        $votes = explode("||", $_COOKIE["voted_suggestion_list"]);
-        $voteId = 0;
-        for ($i = 1; $i < count($votes); $i++) {
-            if (strpos($votes[$i], "sgt$this->id-") !== false) {
-                $voteId = explode("-vid", $votes[$i])[1];
-                break;
-            }
-        }
-        $voteToDelete = Vote::find($voteId);
+
+        $voteToDelete = Vote::where('suggestion_id', $this->id)
+                        ->where('contributor_id', Contributor::currentContributorId())
+                        ->first();
         if ($voteToDelete) {
             $voteToDelete->delete();
-            $this->updateVotedSuggestionListCookie('removeVote', $this->id, $voteId);
-        } else {
-            return;
         }
     }
 
+    /**
+     * Comments with deleted status will not be counted.
+     */
     public function countCommentForNormalUser() {
         return $this->comments()->where([
             ['status', '!=', 'deleted']
         ])->count();
     }
+
+    /**
+     * All comments will be counted.
+     */
     public function countCommentForAdmin() {
-        return $this->comments()->count();
+        return $this->comments->count();
     }
 
+    /**
+     * Check if the current user can edit this suggestion.
+     * There are 3 objects: admin who owns this board, admin who doesn't own this board, and normal user.
+     */
     public function currentUserCanEditThisSuggestion() {
-        if ($this->currentContributorCanEditThisSuggestion()) {
-            return true;
-        } elseif ($this->currentAdminOwnsThisBoard()) {
+        if ($this->currentAdminOwnsThisBoard()) {
             return true;
         } elseif ($this->currentAdminCanEditThisSuggestion()) {
             return true;
-        }
-        return false;
-    }
-
-    public function currentContributorCanEditThisSuggestion() {
-        if (auth()->guest()) {
-            if (!isset($_COOKIE['cid'])) {
-                return false;
-            } else {
-                return $_COOKIE['cid'] == $this->contributor_id and now()->subHour() <= $this->created_at;
-            }
+        } elseif ($this->currentNormalUserCanEditThisSuggestion()) {
+            return true;
         }
     }
 
+    /**
+     * This system has many admins, this function checks if the current admin owns this board.
+     * The admin who owns this board has full control over suggestions and comments.
+     */
+    public function currentAdminOwnsThisBoard() {
+        return auth()->check()
+            and $this->board->user_id == auth()->id();
+    }
+
+    /**
+     * Check if an admin who doesn't own this board can edit this suggestion.
+     */
     public function currentAdminCanEditThisSuggestion() {
-        return auth()->check() and auth()->user()->contributor_id == $this->contributor_id
+        return auth()->check()
+            and auth()->user()->contributor_id == $this->contributor_id
             and now()->subHour() <= $this->created_at;
     }
 
-    public function currentAdminOwnsThisBoard() {
-        if (auth()->check()) {
-            if ($this->board->user_id == auth()->id()) {
-                return true;
-            }
+    /**
+     * Check if the current normal user can edit this suggestion.
+     */
+    public function currentNormalUserCanEditThisSuggestion() {
+        if (! CookieController::cookieIsNotSetOrChangedOrDeleted()) {
+            $contributorId = Crypt::decrypt($_COOKIE["c_id"]);
+            return $contributorId == $this->contributor_id
+                and now()->subHour() <= $this->created_at;
         }
     }
 
-    public function createdByAdminOfThisBoard() {
-        if ($this->currentAdminOwnsThisBoard() and auth()->user()->contributor_id == $this->contributor_id) {
-            return true;
-        }
-        return false;
-    }
 
-    public function contributorOfThisBrowser() {
-        if (!isset($_COOKIE["cid"])) {
-            return 1;
-        }
-        return $_COOKIE["cid"];
-    }
-
-    public function updateVotedSuggestionListCookie($action, $suggestionId, $voteId) {
-        if ($action == 'vote') {
-            $newCookie = $_COOKIE["voted_suggestion_list"] . "sgt$suggestionId-vid$voteId||";
-            setcookie("voted_suggestion_list", $newCookie, time() + 86400 * 365, "/");
-        } else {
-            $newCookie = str_replace("|sgt$suggestionId-vid$voteId|", "", $_COOKIE["voted_suggestion_list"]);
-            setcookie("voted_suggestion_list", $newCookie, time() + 86400 * 365, "/");
-        }
-    }
 
 }

@@ -15,6 +15,14 @@ class EditSuggestion extends Component {
     public $shopName;
     public $email;
 
+    protected $rules = [
+        'title' => 'required|min:4',
+        'description' => 'required|min:4',
+        'name' => 'required|min:4',
+        'shopName' => 'required|min:4',
+        'email' => 'required|email:rfc,dns'
+    ];
+
     public function mount() {
         $this->title=$this->suggestion->title;
         $this->description=$this->suggestion->description;
@@ -28,17 +36,21 @@ class EditSuggestion extends Component {
             abort(Response::HTTP_FORBIDDEN);
         }
 
+        $this->validate();
+
         $this->suggestion->update([
             'title' => $this->title,
             'description' => $this->description
         ]);
-        if (! $this->suggestion->createdByAdminOfThisBoard()) {
+
+        if (! (auth()->check() and $this->suggestion->contributor_id == auth()->user()->contributor_id)) {
             $this->suggestion->contributor->update([
                 'name' => $this->name,
                 'shop_name' => $this->shopName,
                 'email' => $this->email
             ]);
         }
+
         $this->emit('suggestionWasUpdated');
     }
 

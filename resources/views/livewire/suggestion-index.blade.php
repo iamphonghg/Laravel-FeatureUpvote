@@ -54,9 +54,9 @@
                     <div>&bull;</div>
                     <div class="text-gray-900">
                         @if ($suggestion->currentAdminOwnsThisBoard())
-                        {{ $suggestion->countCommentForAdmin() }}
+                            {{ $suggestion->countCommentForAdmin() }}
                         @else
-                        {{ $suggestion->countCommentForNormalUser() }}
+                            {{ $suggestion->countCommentForNormalUser() }}
                         @endif
                         comments
                     </div>

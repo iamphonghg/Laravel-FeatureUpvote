@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\CookieController;
 use App\Models\Board;
 use App\Models\Contributor;
 use App\Models\Suggestion;
+use Illuminate\Support\Facades\Crypt;
 use Livewire\Component;
 
 class CreateSuggestion extends Component {
@@ -16,70 +18,69 @@ class CreateSuggestion extends Component {
     public $urlName;
 
     protected $rules = [
-        'title' => 'required|min-4',
-        'description' => 'required|min-4',
-        'name' => 'required|min-4',
-        'shopName' => 'required|min-4',
+        'title' => 'required|min:4',
+        'description' => 'required|min:4',
+        'name' => 'required|min:4',
+        'shopName' => 'required|min:4',
+        'email' => 'required|email:rfc,dns'
     ];
+
+    protected $listeners = ['commentWasAdded', 'commentWasUpdated'];
+
+    public function commentWasAdded() {
+        $this->reset();
+        $this->mount();
+    }
+    public function commentWasUpdated() {
+        $this->reset();
+        $this->mount();
+    }
 
     public function mount()
     {
-        if (auth()->check()) {
-            $this->name = auth()->user()->name;
-            $this->shopName = 'Admin';
-            $this->email = auth()->user()->email;
-        } elseif (isset($_COOKIE['cid'])) {
-            $contributor = Contributor::find($_COOKIE['cid']);
-            if (isset($contributor)) {
+        $contributor = Contributor::find(Contributor::currentContributorId());
+        if ($contributor) {
+            if ($contributor->name == 'New User') {
+                $this->name = '';
+            } else {
                 $this->name = $contributor->name;
-                $this->shopName = $contributor->shop_name;
-                $this->email = $contributor->email;
             }
+            $this->shopName = $contributor->shop_name;
+            $this->email = $contributor->email;
         }
     }
 
+    /**
+     * Create new suggestion, then vote for it, update contributor information if the current user is
+     * normal user.
+     */
     public function createSuggestion() {
-        // $this->validate();  ---error
-        $boardId = Board::where('url_name', $this->urlName)->first()->id;
+        $this->validate();
 
-        $contributor = new Contributor();
-        if (auth()->check()) {
-            $contributor = Contributor::find(auth()->user()->contributor_id);
-        } elseif (isset($_COOKIE['cid'])) {
-            $contributor = Contributor::find($_COOKIE['cid']);
-            if (isset($contributor)) {
-               $contributor->update([
-                    'name' => $this->name,
-                    'shop_name' => $this->shopName,
-                    'email' => $this->email
-                ]);
-            } else {
-                $contributor = Contributor::create([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'shop_name' => $this->shopName,
-                ]);
-                setcookie("cid", $contributor->id, time() + 86400 * 365, "/");
-            }
-        } else {
-            $contributor = Contributor::create([
+        $board = Board::where('url_name', $this->urlName)->first();
+
+        $contributor = Contributor::find(Contributor::currentContributorId());
+        if (! auth()->check()) {
+            $contributor->update([
                 'name' => $this->name,
-                'email' => $this->email,
                 'shop_name' => $this->shopName,
+                'email' => $this->email
             ]);
-            setcookie("cid", $contributor->id, time() + 86400 * 365, "/");
         }
-        Suggestion::create([
+
+        $suggestion = Suggestion::create([
             'contributor_id' => $contributor->id,
-            'board_id' => $boardId,
+            'board_id' => $board->id,
             'title' => $this->title,
             'description' => $this->description,
             'status' => 'considering',
         ]);
+
+        $suggestion->vote();
+
         session()->flash('successMessage', 'Suggestion was successfully added.');
-        $board = $this->urlName;    // after use reset(), urlName will disappear
         $this->reset();
-        return redirect()->route('suggestion.index', $board);
+        return redirect()->route('suggestion.index', $board->url_name);
     }
 
     public function render() {

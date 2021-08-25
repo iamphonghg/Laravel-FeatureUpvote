@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Board;
+use App\Models\Contributor;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -41,23 +42,15 @@ class SuggestionsIndex extends Component {
 
     public function currentAdminOwnsThisBoard() {
         $board = Board::where('url_name', $this->urlName)->first();
-        if (auth()->check()) {
-            if ($board->user_id == auth()->id()) {
-                return true;
-            }
-        }
+        return auth()->check()
+            and $board->user_id == auth()->id();
     }
 
     public function render() {
         $board = Board::where('url_name', $this->urlName)->first();
 
-        $contributorId = 0;
-        if (auth()->check()) {
-            $contributorId = auth()->user()->contributor_id;
-        } elseif (isset($_COOKIE['cid'])) {
-            $contributorId = $_COOKIE['cid'];
-        }
-        // dd($contributorId);
+        $contributorId = Contributor::currentContributorId();
+
         return view('livewire.suggestions-index', [
             'suggestions' => $board->suggestions()
             ->with('contributor')

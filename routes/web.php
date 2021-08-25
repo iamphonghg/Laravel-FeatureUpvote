@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CookieController;
 use App\Http\Controllers\SuggestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-if (!isset($_COOKIE["voted_suggestion_list"])) {
-    setcookie("voted_suggestion_list", "list:||", time() + 86400 * 365, "/");
-}
+CookieController::checkCookie();
 
 Route::get('/', function() {
     return redirect(route('suggestion.index', 'demoproduct'));

@@ -13,7 +13,7 @@ class SuggestionShow extends Component {
     protected $listeners = ['statusWasUpdated', 'suggestionWasUpdated', 'commentWasAdded', 'commentWasDeleted'];
 
     public function mount() {
-        $this->hasVoted = $this->suggestion->isVotedByThisBrowser();
+        $this->hasVoted = $this->suggestion->isVotedByCurrentUser();
     }
 
     public function statusWasUpdated() {

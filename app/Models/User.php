@@ -46,8 +46,4 @@ class User extends Authenticatable
     public function boards() {
         return $this->hasMany(Board::class);
     }
-
-    public function getContributor() {
-        return $this->hasOne(Contributor::class);
-    }
 }

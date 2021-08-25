@@ -8,7 +8,7 @@
             </select>
         </div>
         <div class="w-full md:w-2/3 relative">
-            <input wire:model="search" type="search" placeholder="Find a suggestion" class="w-full rounded-xl bg-white border-none font-semibold pl-9 py-2 placeholder-gray-900">
+            <input wire:model="search" type="search" placeholder="Find a suggestion" class="w-full rounded-xl bg-white border-none font-semibold pl-9 py-2 placeholder-gray-500">
             <div class="absolute top-0 flex items-center h-full pl-3">
                 <svg class="w-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

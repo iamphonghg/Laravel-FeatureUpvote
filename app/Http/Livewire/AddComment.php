@@ -13,53 +13,42 @@ class AddComment extends Component {
     public $shopName;
     public $email;
 
+    protected $rules = [
+        'body' => 'required|min:4',
+        'name' => 'required|min:4',
+        'shopName' => 'required|min:4',
+        'email' => 'required|email:rfc,dns'
+    ];
+
     public function mount() {
-        if (auth()->check()) {
-            $this->name = auth()->user()->name;
-            $this->email = auth()->user()->email;
-        } elseif (isset($_COOKIE['cid'])) {
-            $contributor = Contributor::find($_COOKIE['cid']);
-            if (isset($contributor)) {
+        $contributor = Contributor::find(Contributor::currentContributorId());
+        if ($contributor) {
+            if ($contributor->name == 'New User') {
+                $this->name = '';
+            } else {
                 $this->name = $contributor->name;
-                $this->shopName = $contributor->shop_name;
-                $this->email = $contributor->email;
             }
+            $this->shopName = $contributor->shop_name;
+            $this->email = $contributor->email;
         }
+
     }
 
     public function addComment() {
-        $contributorId = 0;
-        if (auth()->check()) {
-            $contributorId = auth()->user()->contributor_id;
-        } elseif (isset($_COOKIE['cid'])) {
-            $contributor = Contributor::find($_COOKIE['cid']);
-            if (isset($contributor)) {
-                $contributor->update([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'shop_name' => $this->shopName
-                ]);
-                $contributorId = $_COOKIE['cid'];
-            } else {
-                $contributorId = Contributor::create([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'shop_name' => $this->shopName
-                ])->id;
-                setcookie("cid", $contributorId, time() + 86400 * 365, "/");
-            }
-        } else {
-            $contributorId = Contributor::create([
+        $this->validate();
+
+        $contributor = Contributor::find(Contributor::currentContributorId());
+        if (! auth()->check()) {
+            $contributor->update([
                 'name' => $this->name,
-                'email' => $this->email,
-                'shop_name' => $this->shopName
-            ])->id;
-            setcookie("cid", $contributorId, time() + 86400 * 365, "/");
+                'shop_name' => $this->shopName,
+                'email' => $this->email
+            ]);
         }
 
         Comment::create([
             'suggestion_id' => $this->suggestion->id,
-            'contributor_id' => $contributorId,
+            'contributor_id' => $contributor->id,
             'body' => $this->body,
             'status' => 'approved'
         ]);

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\CookieController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class Comment extends Model {
     use HasFactory;
@@ -17,30 +19,35 @@ class Comment extends Model {
         return $this->belongsTo(Suggestion::class);
     }
 
+    /**
+     * Check if the current user can edit this comment.
+     * There are 3 objects: admin who owns this board, admin who doesn't own this board, and normal user.
+     */
     public function currentUserCanEditThisComment() {
-        if ($this->currentContributorCanEditThisComment()) {
+        if ($this->suggestion->currentAdminOwnsThisBoard()) {
             return true;
-        } elseif ($this->suggestion->currentAdminOwnsThisBoard()) {
+        } elseif ($this->currentAdminCanEditThisComment()) {
             return true;
-        } elseif ($this->currentAdminCreatedThisCommentButNotOwnsThisBoard()) {
-            return true;
-        }
-        return false;
-    }
-
-    public function currentAdminCreatedThisCommentButNotOwnsThisBoard() {
-        if (auth()->check() and $this->contributor_id == auth()->user()->contributor_id) {
+        } elseif ($this->currentNormalUserCanEditThisComment()) {
             return true;
         }
     }
 
-    public function currentContributorCanEditThisComment() {
-        if (auth()->guest()) {
-            if (!isset($_COOKIE['cid'])) {
-                return false;
-            } else {
-                return $_COOKIE['cid'] == $this->contributor_id;
-            }
+    /**
+     * Check if an admin who doesn't own this board can edit this comment.
+     */
+    public function currentAdminCanEditThisComment() {
+        return auth()->check()
+            and auth()->user()->contributor_id == $this->contributor_id;
+    }
+
+    /**
+     * Check if the current normal user can edit this comment.
+     */
+    public function currentNormalUserCanEditThisComment() {
+        if (! CookieController::cookieIsNotSetOrChangedOrDeleted()) {
+            $contributorId = Crypt::decrypt($_COOKIE["c_id"]);
+            return $contributorId == $this->contributor_id;
         }
     }
 

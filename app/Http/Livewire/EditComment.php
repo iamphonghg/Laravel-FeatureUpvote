@@ -13,6 +13,13 @@ class EditComment extends Component {
     public $shopName;
     public $email;
 
+    protected $rules = [
+        'body' => 'required|min:4',
+        'name' => 'required|min:4',
+        'shopName' => 'required|min:4',
+        'email' => 'required|email:rfc,dns'
+    ];
+
     protected $listeners = ['setEditComment'];
 
     public function setEditComment($commentId) {
@@ -30,14 +37,20 @@ class EditComment extends Component {
             abort(Response::HTTP_FORBIDDEN);
         }
 
-        $this->comment->body = $this->body;
-        $this->comment->save();
+        $this->validate();
 
-        $this->comment->contributor->update([
-            'name' => $this->name,
-            'shop_name' => $this->shopName,
-            'email' => $this->email
+        $this->comment->update([
+            'body' => $this->body
         ]);
+
+        if (! (auth()->check() and $this->comment->contributor_id == auth()->user()->contributor_id)) {
+            $this->comment->contributor->update([
+                'name' => $this->name,
+                'shop_name' => $this->shopName,
+                'email' => $this->email
+            ]);
+        }
+
 
         $this->emit('commentWasUpdated');
     }

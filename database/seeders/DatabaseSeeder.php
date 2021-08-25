@@ -18,12 +18,6 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-
-        Contributor::factory()->create([
-            'name' => 'anonymous',
-            'email' => 'anonymous@email.com',
-            'shop_name' => '@nonymous'
-        ]);
         Contributor::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@secomus.com',
@@ -31,7 +25,7 @@ class DatabaseSeeder extends Seeder {
         ]);
         User::factory()->create([
             'name' => 'Admin',
-            'contributor_id' => 2,
+            'contributor_id' => 1,
             'email' => 'admin@secomus.com',
             'password' => Hash::make('123123123')
         ]);
@@ -40,11 +34,11 @@ class DatabaseSeeder extends Seeder {
             'board_name' => 'Demo Product',
             'url_name' => 'demoproduct'
         ]);
-        Contributor::factory(18)->create();
+        Contributor::factory(19)->create();
         Suggestion::factory(20)->create();
 
         // generate unique votes. Ensure suggestion_id and contributor_id are unique for each row
-        foreach (range(2, 20) as $contributor_id) {
+        foreach (range(1, 20) as $contributor_id) {
             foreach (range(1, 20) as $suggestion_id) {
                 if ($suggestion_id % 2 === 0) {
                     Vote::factory()->create([

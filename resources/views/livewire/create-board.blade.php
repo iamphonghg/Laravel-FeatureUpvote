@@ -36,13 +36,13 @@
                 <form wire:submit.prevent="createBoard" action="#" method="POST" class="space-y-4 px-4 pt-6">
                     <div>
                         <input wire:model.defer="boardName" type="text"
-                            class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 text-sm"
-                            placeholder="Board name">
+                            class="w-full bg-gray-100 rounded-xl placeholder-gray-400 border-none font-semibold px-4 text-sm"
+                            placeholder="Board name" required>
                     </div>
                     <div>
                         <input wire:model.defer="urlName" type="text"
-                            class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none font-semibold px-4 py-2 text-sm"
-                            placeholder="Short name (used in board URL)">
+                            class="w-full bg-gray-100 rounded-xl placeholder-gray-400 border-none font-semibold px-4 py-2 text-sm"
+                            placeholder="Short name (used in board URL)" required>
                     </div>
                     <div class="flex items-center justify-end">
                         <button type="submit"

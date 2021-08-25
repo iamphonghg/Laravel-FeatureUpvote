@@ -16,8 +16,8 @@ class CreateContributorsTable extends Migration
         Schema::create('contributors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
-            $table->string('shop_name');
+            $table->string('email')->nullable();
+            $table->string('shop_name')->nullable();
             $table->timestamps();
         });
     }

@@ -6,8 +6,7 @@ use App\Models\Board;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class BoardController extends Controller
-{
+class BoardController extends Controller {
     /**
      * Display a listing of the resource.
      *

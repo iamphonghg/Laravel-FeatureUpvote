@@ -14,7 +14,7 @@ class SuggestionIndex extends Component {
     public $hasVoted;
 
     public function mount() {
-        $this->hasVoted = $this->suggestion->isVotedByThisBrowser();
+        $this->hasVoted = $this->suggestion->isVotedByCurrentUser();
     }
 
     public function vote() {
